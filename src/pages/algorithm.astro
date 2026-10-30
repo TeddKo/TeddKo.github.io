@@ -1,0 +1,19 @@
+---
+import { getCollection } from "astro:content";
+import CategoryList from "@/components/CategoryList.astro";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+const posts = getSortedPosts(
+  await getCollection("posts", ({ data }) => data.category === "algorithm")
+);
+---
+
+<CategoryList
+  title={t.nav.algorithm}
+  eyebrow={t.categories.algorithmEyebrow}
+  description={t.categories.algorithmDesc}
+  posts={posts}
+/>

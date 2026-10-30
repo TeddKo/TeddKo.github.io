@@ -1,0 +1,153 @@
+{
+  "nav": {
+    "home": "홈",
+    "posts": "Posts",
+    "tags": "태그",
+    "about": "About",
+    "archives": "아카이브",
+    "search": "검색",
+    "dataStructure": "자료구조",
+    "algorithm": "알고리즘",
+    "cs": "CS",
+    "language": "언어",
+    "mobile": "모바일",
+    "server": "서버",
+    "projects": "Projects"
+  },
+  "post": {
+    "publishedAt": "작성일",
+    "updatedAt": "수정일",
+    "sharePostIntro": "이 글 공유하기:",
+    "sharePostOn": "{{platform}}에 이 글 공유하기",
+    "sharePostViaEmail": "이메일로 이 글 공유하기",
+    "tagLabel": "태그",
+    "backToTop": "맨 위로",
+    "goBack": "뒤로 가기",
+    "editPage": "페이지 수정",
+    "previousPost": "이전 글",
+    "nextPost": "다음 글"
+  },
+  "pagination": {
+    "prev": "이전",
+    "next": "다음",
+    "page": "페이지"
+  },
+  "home": {
+    "socialLinks": "소셜 링크",
+    "featured": "추천 글",
+    "recentPosts": "최근 글",
+    "allPosts": "전체 글 보기"
+  },
+  "footer": {
+    "copyright": "Copyright",
+    "allRightsReserved": "All rights reserved."
+  },
+  "pages": {
+    "tagTitle": "태그",
+    "tagDesc": "다음 태그가 달린 모든 글",
+    "tagsTitle": "태그",
+    "tagsDesc": "글에 사용된 모든 태그.",
+    "postsTitle": "Posts",
+    "postsDesc": "작성한 모든 글.",
+    "archivesTitle": "아카이브",
+    "archivesDesc": "보관된 모든 글.",
+    "searchTitle": "검색",
+    "searchDesc": "글 검색 ..."
+  },
+  "a11y": {
+    "skipToContent": "본문으로 건너뛰기",
+    "openMenu": "메뉴 열기",
+    "closeMenu": "메뉴 닫기",
+    "mainNav": "주 메뉴",
+    "menu": "메뉴",
+    "toggleTheme": "테마 전환",
+    "searchPlaceholder": "글 검색...",
+    "noResults": "검색 결과가 없습니다",
+    "goToPreviousPage": "이전 페이지로 이동",
+    "goToNextPage": "다음 페이지로 이동"
+  },
+  "notFound": {
+    "title": "404 Not Found",
+    "message": "페이지를 찾을 수 없습니다",
+    "goHome": "홈으로 돌아가기"
+  },
+  "categories": {
+    "labels": {
+      "cs": "CS",
+      "data-structure": "자료구조",
+      "algorithm": "알고리즘",
+      "kotlin": "Kotlin",
+      "dart": "Dart",
+      "java": "Java",
+      "swift": "Swift",
+      "android": "Android",
+      "flutter": "Flutter",
+      "cmp": "CMP",
+      "react-native": "React Native",
+      "server": "서버",
+      "etc": "기타"
+    },
+    "csEyebrow": "Computer Science",
+    "csDesc": "운영체제와 컴퓨터 구조.",
+    "dataStructureEyebrow": "Data Structure",
+    "dataStructureDesc": "자료구조 개념 정리와 구현 노트.",
+    "algorithmEyebrow": "Algorithm",
+    "algorithmDesc": "알고리즘 문제 풀이와 정리.",
+    "serverEyebrow": "Server-side",
+    "serverDesc": "백엔드 개발과 서버 운영 기록.",
+    "languageEyebrow": "Language",
+    "languageDesc": "Kotlin, Dart, Java, Swift 문법과 활용 정리.",
+    "languageFilterLabel": "언어 카테고리",
+    "mobileEyebrow": "Mobile",
+    "mobileDesc": "Android, Flutter, CMP, React Native 개발 기록.",
+    "mobileFilterLabel": "모바일 카테고리",
+    "subDesc": "{{label}} 관련 글 모음.",
+    "filterAll": "전체",
+    "empty": "아직 글이 없습니다."
+  },
+  "projects": {
+    "eyebrow": "Work",
+    "detailEyebrow": "Project",
+    "description": "해 온 프로젝트와 지금 하는 프로젝트.",
+    "detailLink": "자세히 보기",
+    "members": "프로젝트 구성원",
+    "viewOriginal": "원본 크기로 보기",
+    "backToList": "프로젝트 목록으로"
+  },
+  "card": {
+    "featured": "추천 ·"
+  },
+  "more": {
+    "expand": "자세히",
+    "collapse": "접기"
+  },
+  "postBrowser": {
+    "categoryNav": "카테고리",
+    "tagNav": "태그",
+    "tagAll": "태그 전체",
+    "countLabel": "{{n}}개의 글",
+    "empty": "조건에 맞는 글이 없습니다.",
+    "reset": "필터 초기화"
+  },
+  "search": {
+    "label": "글 검색",
+    "clear": "검색어 지우기",
+    "loading": "검색 중...",
+    "devNoticeTitle": "DEV 모드 안내",
+    "devNoticeBody": "검색 결과를 보려면 프로젝트를 한 번 빌드해야 합니다.",
+    "error": "검색을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
+    "resultCount": "{{n}}개의 결과",
+    "resultsNav": "검색 결과",
+    "more": "더 보기"
+  },
+  "viz": {
+    "region": "인터랙티브 시각화",
+    "first": "처음으로",
+    "prev": "이전 단계",
+    "play": "재생",
+    "pause": "일시정지",
+    "next": "다음 단계",
+    "speedLabel": "재생 속도, 현재 {{speed}}배",
+    "seek": "단계 이동"
+  }
+}

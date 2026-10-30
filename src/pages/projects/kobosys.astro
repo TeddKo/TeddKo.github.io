@@ -1,0 +1,7 @@
+---
+import PdfProject from "@/components/PdfProject.astro";
+import type { Block } from "@/components/PdfProject.astro";
+import data from "@/data/projects/kobosys.json";
+---
+
+<PdfProject {...data} blocks={data.blocks as Block[]} />

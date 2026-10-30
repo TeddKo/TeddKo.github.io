@@ -1,0 +1,940 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+backend:
+  name: github
+  repo: TeddKo/TeddKo.github.io
+  branch: master
+  # 원격 편집용 OAuth 워커 URL. 배포 후 주석 해제하고 채울 것 — docs/cms-setup.md 참고
+  # base_url: https://sveltia-cms-auth.<서브도메인>.workers.dev
+
+media_folder: src/assets/images
+public_folder: "@/assets/images"
+
+output:
+  omit_empty_optional_fields: true
+  json:
+    indent_style: space
+    indent_size: 2
+
+collections:
+  - name: posts
+    label: 글
+    label_singular: 글
+    folder: src/content/posts
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { name: title, label: 제목, widget: string }
+      - { name: description, label: 설명, widget: text }
+      - {
+          name: pubDatetime,
+          label: 작성일,
+          widget: datetime,
+          input_timezone: Asia/Seoul,
+        }
+      - {
+          name: modDatetime,
+          label: 수정일,
+          widget: datetime,
+          required: false,
+          input_timezone: Asia/Seoul,
+        }
+      - name: category
+        label: 카테고리
+        widget: select
+        default: etc
+        options:
+          - { label: CS, value: cs }
+          - { label: 자료구조, value: data-structure }
+          - { label: 알고리즘, value: algorithm }
+          - { label: Kotlin, value: kotlin }
+          - { label: Dart, value: dart }
+          - { label: Java, value: java }
+          - { label: Swift, value: swift }
+          - { label: Android, value: android }
+          - { label: Flutter, value: flutter }
+          - { label: CMP, value: cmp }
+          - { label: React Native, value: react-native }
+          - { label: 서버, value: server }
+          - { label: 기타, value: etc }
+      - {
+          name: tags,
+          label: 태그,
+          widget: list,
+          default: [others],
+          field: { name: tag, label: 태그, widget: string },
+        }
+      - {
+          name: draft,
+          label: 초안,
+          widget: boolean,
+          default: false,
+          required: false,
+        }
+      - {
+          name: featured,
+          label: 추천 글,
+          widget: boolean,
+          default: false,
+          required: false,
+        }
+      - { name: body, label: 본문, widget: markdown }
+
+  - name: pages
+    label: 페이지
+    label_singular: 페이지
+    folder: src/content/pages
+    extension: md
+    format: yaml-frontmatter
+    create: false
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    icon: description
+    fields:
+      - { name: title, label: 제목, widget: string }
+      - { name: description, label: 설명, widget: text, required: false }
+      - {
+          name: ogImage,
+          label: OG 이미지 경로,
+          widget: string,
+          required: false,
+        }
+      - {
+          name: canonicalURL,
+          label: 표준 URL(canonical),
+          widget: string,
+          required: false,
+        }
+      - { name: body, label: 본문, widget: markdown }
+
+singletons:
+  - name: site
+    label: 사이트 설정
+    file: src/data/site.json
+    icon: settings
+    fields:
+      - name: site
+        label: 기본 정보
+        widget: object
+        collapsed: true
+        fields:
+          - { name: url, label: 사이트 URL, widget: string }
+          - { name: title, label: 제목, widget: string }
+          - { name: description, label: 설명, widget: text }
+          - { name: author, label: 작성자, widget: string }
+          - { name: profile, label: 프로필 URL, widget: string }
+          - { name: ogImage, label: 기본 OG 이미지 파일명, widget: string }
+          - { name: lang, label: 언어 코드, widget: string }
+          - { name: timezone, label: 타임존, widget: string }
+          - {
+              name: dir,
+              label: 텍스트 방향,
+              widget: select,
+              options: ["ltr", "rtl"],
+            }
+      - name: posts
+        label: 글 목록 설정
+        widget: object
+        collapsed: true
+        fields:
+          - {
+              name: perPage,
+              label: 페이지당 글 수,
+              widget: number,
+              value_type: int,
+            }
+          - {
+              name: perIndex,
+              label: 홈 노출 글 수,
+              widget: number,
+              value_type: int,
+            }
+          - {
+              name: scheduledPostMargin,
+              label: 예약 발행 여유시간(ms),
+              widget: number,
+              value_type: int,
+            }
+      - name: features
+        label: 기능 플래그
+        widget: object
+        collapsed: true
+        fields:
+          - { name: lightAndDarkMode, label: 라이트/다크 모드, widget: boolean }
+          - { name: dynamicOgImage, label: 동적 OG 이미지, widget: boolean }
+          - { name: showArchives, label: 아카이브 표시, widget: boolean }
+          - { name: showBackButton, label: 뒤로가기 버튼 표시, widget: boolean }
+          - name: editPost
+            label: 글 수정 링크
+            widget: object
+            fields:
+              - { name: enabled, label: 사용 여부, widget: boolean }
+              - { name: url, label: 수정 URL, widget: string }
+          - { name: search, label: 검색 엔진, widget: string }
+      - name: socials
+        label: 소셜 링크
+        widget: list
+        collapsed: true
+        summary: "{{fields.name}}"
+        fields:
+          - { name: name, label: 이름, widget: string }
+          - { name: url, label: URL, widget: string }
+      - name: shareLinks
+        label: 공유 링크
+        widget: list
+        collapsed: true
+        summary: "{{fields.name}}"
+        fields:
+          - { name: name, label: 이름, widget: string }
+          - { name: url, label: URL, widget: string }
+
+  - name: home
+    label: 홈 화면
+    file: src/data/home.json
+    icon: home
+    fields:
+      - { name: avatarAlt, label: 아바타 대체 텍스트, widget: string }
+      - name: hero
+        label: 히어로 문구
+        widget: object
+        fields:
+          - { name: pre, label: 앞 텍스트, widget: string }
+          - { name: accent, label: 강조 텍스트, widget: string }
+          - { name: post, label: 뒤 텍스트, widget: string }
+          - { name: name, label: 이름, widget: string }
+          - { name: lead, label: 소개 문장, widget: text }
+      - name: cta
+        label: 버튼 문구
+        widget: object
+        fields:
+          - { name: projects, label: 프로젝트 버튼, widget: string }
+          - { name: posts, label: 글 버튼, widget: string }
+      - { name: statement, label: 소개 문구, widget: text }
+      - name: stats
+        label: 통계 카드
+        widget: list
+        collapsed: true
+        summary: "{{fields.label}}"
+        fields: &statItemFields
+          - { name: n, label: 숫자, widget: number, value_type: float }
+          - {
+              name: dec,
+              label: 소수 자릿수,
+              widget: number,
+              value_type: int,
+              required: false,
+            }
+          - { name: suf, label: 접미사, widget: string, required: false }
+          - { name: pre, label: 접두사, widget: string, required: false }
+          - {
+              name: top,
+              label: 상단 보조 텍스트,
+              widget: string,
+              required: false,
+            }
+          - { name: from, label: 시작 값, widget: number, required: false }
+          - { name: label, label: 설명, widget: string }
+          - { name: span, label: 그리드 span 클래스, widget: string }
+      - name: sections
+        label: 섹션 문구
+        widget: object
+        collapsed: true
+        fields:
+          - name: about
+            label: About 섹션
+            widget: object
+            fields:
+              - { name: eyebrow, label: Eyebrow, widget: string }
+              - { name: moreLabel, label: 더 보기 라벨, widget: string }
+          - name: impact
+            label: Impact 섹션
+            widget: object
+            fields:
+              - { name: eyebrow, label: Eyebrow, widget: string }
+              - { name: headline, label: 헤드라인, widget: string }
+          - name: strengths
+            label: Strengths 섹션
+            widget: object
+            fields:
+              - { name: eyebrow, label: Eyebrow, widget: string }
+              - { name: headline, label: 헤드라인, widget: string }
+              - { name: moreLabel, label: 더 보기 라벨, widget: string }
+          - name: posts
+            label: Posts 섹션
+            widget: object
+            fields:
+              - { name: eyebrow, label: Eyebrow, widget: string }
+              - { name: allLabel, label: 전체 보기 라벨, widget: string }
+          - name: projects
+            label: Projects 섹션
+            widget: object
+            fields:
+              - { name: eyebrow, label: Eyebrow, widget: string }
+              - { name: headline, label: 헤드라인, widget: string }
+              - { name: moreLabel, label: 더 보기 라벨, widget: string }
+
+  - name: about
+    label: About 페이지 데이터
+    file: src/data/about.json
+    icon: person
+    fields:
+      - { name: avatarAlt, label: 아바타 대체 텍스트, widget: string }
+      - name: name
+        label: 이름
+        widget: object
+        fields:
+          - { name: ko, label: 한국어, widget: string }
+          - { name: en, label: 영어, widget: string }
+      - { name: headline, label: 헤드라인, widget: string }
+      - name: facts
+        label: 요약 정보
+        widget: list
+        collapsed: true
+        summary: "{{fields.label}}"
+        fields:
+          - { name: label, label: 라벨, widget: string }
+          - { name: value, label: 값, widget: string }
+      - name: sections
+        label: 섹션 문구
+        widget: object
+        collapsed: true
+        fields:
+          - name: impact
+            label: Impact 섹션
+            widget: object
+            fields: &eyebrowHeadlineFields
+              - { name: eyebrow, label: Eyebrow, widget: string }
+              - { name: headline, label: 헤드라인, widget: string }
+          - {
+              name: strengths,
+              label: Strengths 섹션,
+              widget: object,
+              fields: *eyebrowHeadlineFields,
+            }
+          - {
+              name: experience,
+              label: Experience 섹션,
+              widget: object,
+              fields: *eyebrowHeadlineFields,
+            }
+          - {
+              name: stack,
+              label: Stack 섹션,
+              widget: object,
+              fields: *eyebrowHeadlineFields,
+            }
+          - {
+              name: beyondWork,
+              label: Beyond Work 섹션,
+              widget: object,
+              fields: *eyebrowHeadlineFields,
+            }
+          - name: github
+            label: GitHub 섹션
+            widget: object
+            fields:
+              - { name: eyebrow, label: Eyebrow, widget: string }
+              - { name: headline, label: 헤드라인, widget: string }
+              - {
+                  name: statsAlt,
+                  label: 통계 이미지 대체 텍스트,
+                  widget: string,
+                }
+              - {
+                  name: langsAlt,
+                  label: 언어 이미지 대체 텍스트,
+                  widget: string,
+                }
+      - name: metrics
+        label: 임팩트 지표
+        widget: list
+        collapsed: true
+        summary: "{{fields.label}}"
+        fields: *statItemFields
+      - name: techGroups
+        label: 기술 스택 그룹
+        widget: list
+        collapsed: true
+        summary: "{{fields.name}}"
+        fields:
+          - { name: name, label: 그룹명, widget: string }
+          - {
+              name: items,
+              label: 항목,
+              widget: list,
+              field: { name: item, label: 항목, widget: string },
+            }
+          - { name: span, label: 그리드 span 클래스, widget: string }
+      - name: hobbies
+        label: 취미
+        widget: list
+        collapsed: true
+        summary: "{{fields.name}}"
+        fields:
+          - { name: name, label: 이름, widget: string }
+          - { name: icon, label: "아이콘 SVG path (d 속성값)", widget: text }
+      - name: highlights
+        label: 하이라이트
+        widget: list
+        field: { name: highlight, label: 하이라이트, widget: string }
+      - name: experiences
+        label: 경력
+        widget: list
+        collapsed: true
+        summary: "{{fields.company}}"
+        fields:
+          - { name: company, label: 회사명, widget: string }
+          - { name: period, label: 기간, widget: string }
+          - { name: body, label: 내용, widget: text }
+      - name: otherExperience
+        label: 그 밖의 경력
+        widget: object
+        fields:
+          - { name: period, label: 기간, widget: string }
+          - { name: title, label: 제목, widget: string }
+          - { name: company, label: 회사명, widget: string }
+          - { name: description, label: 설명, widget: text }
+      - { name: language, label: 사용 언어, widget: string }
+      - { name: statsUsername, label: GitHub 통계 사용자명, widget: string }
+      - name: contact
+        label: 연락처
+        widget: object
+        fields:
+          - { name: eyebrow, label: Eyebrow, widget: string }
+          - { name: headline, label: 헤드라인, widget: string }
+          - { name: emailButtonLabel, label: 이메일 버튼 라벨, widget: string }
+          - { name: email, label: 이메일, widget: string }
+          - name: github
+            label: GitHub
+            widget: object
+            fields:
+              - { name: url, label: URL, widget: string }
+              - { name: label, label: 라벨, widget: string }
+          - name: linkedin
+            label: LinkedIn
+            widget: object
+            fields:
+              - { name: url, label: URL, widget: string }
+              - { name: label, label: 라벨, widget: string }
+
+  - name: projects
+    label: 프로젝트 목록
+    file: src/data/projects.json
+    icon: work
+    fields:
+      - name: projects
+        label: 프로젝트
+        widget: list
+        root: true
+        collapsed: true
+        summary: "{{fields.title}}"
+        fields:
+          - { name: title, label: 제목, widget: string }
+          - { name: period, label: 기간, widget: string }
+          - { name: description, label: 설명, widget: text }
+          - {
+              name: tags,
+              label: 태그,
+              widget: list,
+              field: { name: tag, label: 태그, widget: string },
+            }
+          - {
+              name: detailUrl,
+              label: 상세 페이지 경로,
+              widget: string,
+              required: false,
+            }
+
+  - name: skills
+    label: 강점 카드
+    file: src/data/skills.json
+    icon: star
+    fields:
+      - name: skills
+        label: 강점
+        widget: list
+        root: true
+        collapsed: true
+        summary: "{{fields.title}}"
+        fields:
+          - { name: eyebrow, label: Eyebrow, widget: string }
+          - { name: title, label: 제목, widget: string }
+          - { name: body, label: 본문, widget: text }
+          - { name: summary, label: 요약, widget: text }
+          - name: metric
+            label: 지표
+            widget: object
+            fields:
+              - { name: pre, label: 접두사, widget: string, required: false }
+              - { name: n, label: 숫자, widget: number, required: false }
+              - {
+                  name: dec,
+                  label: 소수 자릿수,
+                  widget: number,
+                  value_type: int,
+                  required: false,
+                }
+              - { name: suf, label: 접미사, widget: string, required: false }
+              - {
+                  name: top,
+                  label: 상단 보조 텍스트,
+                  widget: string,
+                  required: false,
+                }
+              - { name: from, label: 시작 값, widget: number, required: false }
+              - { name: text, label: 텍스트, widget: string, required: false }
+              - {
+                  name: quote,
+                  label: 인용 표시,
+                  widget: boolean,
+                  required: false,
+                }
+              - { name: label, label: 설명, widget: string }
+
+  - name: i18n_ko
+    label: UI 문구 (한국어)
+    file: src/data/i18n.ko.json
+    icon: translate
+    fields: &i18nFields
+      - name: nav
+        label: 내비게이션
+        widget: object
+        collapsed: true
+        fields:
+          - { name: home, label: 홈, widget: string }
+          - { name: posts, label: 글 목록, widget: string }
+          - { name: tags, label: 태그, widget: string }
+          - { name: about, label: About, widget: string }
+          - { name: archives, label: 아카이브, widget: string }
+          - { name: search, label: 검색, widget: string }
+          - { name: dataStructure, label: 자료구조, widget: string }
+          - { name: algorithm, label: 알고리즘, widget: string }
+          - { name: cs, label: CS, widget: string }
+          - { name: language, label: 언어, widget: string }
+          - { name: mobile, label: 모바일, widget: string }
+          - { name: server, label: 서버, widget: string }
+          - { name: projects, label: 프로젝트, widget: string }
+      - name: post
+        label: 글 상세
+        widget: object
+        collapsed: true
+        fields:
+          - { name: publishedAt, label: 작성일 라벨, widget: string }
+          - { name: updatedAt, label: 수정일 라벨, widget: string }
+          - { name: sharePostIntro, label: 공유 안내, widget: string }
+          - {
+              name: sharePostOn,
+              label: 플랫폼 공유 문구,
+              widget: string,
+              hint: "{{platform}} 플레이스홀더 포함",
+            }
+          - { name: sharePostViaEmail, label: 이메일 공유 문구, widget: string }
+          - { name: tagLabel, label: 태그 라벨, widget: string }
+          - { name: backToTop, label: 맨 위로, widget: string }
+          - { name: goBack, label: 뒤로 가기, widget: string }
+          - { name: editPage, label: 페이지 수정, widget: string }
+          - { name: previousPost, label: 이전 글, widget: string }
+          - { name: nextPost, label: 다음 글, widget: string }
+      - name: pagination
+        label: 페이지네이션
+        widget: object
+        collapsed: true
+        fields:
+          - { name: prev, label: 이전, widget: string }
+          - { name: next, label: 다음, widget: string }
+          - { name: page, label: 페이지, widget: string }
+      - name: home
+        label: 홈
+        widget: object
+        collapsed: true
+        fields:
+          - { name: socialLinks, label: 소셜 링크, widget: string }
+          - { name: featured, label: 추천 글, widget: string }
+          - { name: recentPosts, label: 최근 글, widget: string }
+          - { name: allPosts, label: 전체 글 보기, widget: string }
+      - name: footer
+        label: 푸터
+        widget: object
+        collapsed: true
+        fields:
+          - { name: copyright, label: Copyright, widget: string }
+          - {
+              name: allRightsReserved,
+              label: All rights reserved,
+              widget: string,
+            }
+      - name: pages
+        label: 페이지 메타
+        widget: object
+        collapsed: true
+        fields:
+          - { name: tagTitle, label: 태그 제목, widget: string }
+          - { name: tagDesc, label: 태그 설명, widget: string }
+          - { name: tagsTitle, label: 태그 목록 제목, widget: string }
+          - { name: tagsDesc, label: 태그 목록 설명, widget: string }
+          - { name: postsTitle, label: 글 목록 제목, widget: string }
+          - { name: postsDesc, label: 글 목록 설명, widget: string }
+          - { name: archivesTitle, label: 아카이브 제목, widget: string }
+          - { name: archivesDesc, label: 아카이브 설명, widget: string }
+          - { name: searchTitle, label: 검색 제목, widget: string }
+          - { name: searchDesc, label: 검색 설명, widget: string }
+      - name: a11y
+        label: 접근성 문구
+        widget: object
+        collapsed: true
+        fields:
+          - { name: skipToContent, label: 본문 바로가기, widget: string }
+          - { name: openMenu, label: 메뉴 열기, widget: string }
+          - { name: closeMenu, label: 메뉴 닫기, widget: string }
+          - { name: mainNav, label: 주 메뉴, widget: string }
+          - { name: menu, label: 메뉴, widget: string }
+          - { name: toggleTheme, label: 테마 전환, widget: string }
+          - {
+              name: searchPlaceholder,
+              label: "검색창 placeholder",
+              widget: string,
+            }
+          - { name: noResults, label: 결과 없음, widget: string }
+          - { name: goToPreviousPage, label: 이전 페이지로, widget: string }
+          - { name: goToNextPage, label: 다음 페이지로, widget: string }
+      - name: notFound
+        label: 404 페이지
+        widget: object
+        collapsed: true
+        fields:
+          - { name: title, label: 제목, widget: string }
+          - { name: message, label: 메시지, widget: string }
+          - { name: goHome, label: 홈으로, widget: string }
+      - name: categories
+        label: 카테고리 페이지
+        widget: object
+        collapsed: true
+        fields:
+          - name: labels
+            label: 카테고리 이름
+            widget: object
+            collapsed: true
+            fields:
+              - { name: cs, label: cs, widget: string }
+              - { name: data-structure, label: data-structure, widget: string }
+              - { name: algorithm, label: algorithm, widget: string }
+              - { name: kotlin, label: kotlin, widget: string }
+              - { name: dart, label: dart, widget: string }
+              - { name: java, label: java, widget: string }
+              - { name: swift, label: swift, widget: string }
+              - { name: android, label: android, widget: string }
+              - { name: flutter, label: flutter, widget: string }
+              - { name: cmp, label: cmp, widget: string }
+              - { name: react-native, label: react-native, widget: string }
+              - { name: server, label: server, widget: string }
+              - { name: etc, label: etc, widget: string }
+          - { name: csEyebrow, label: CS Eyebrow, widget: string }
+          - { name: csDesc, label: CS 설명, widget: string }
+          - {
+              name: dataStructureEyebrow,
+              label: 자료구조 Eyebrow,
+              widget: string,
+            }
+          - { name: dataStructureDesc, label: 자료구조 설명, widget: string }
+          - { name: algorithmEyebrow, label: 알고리즘 Eyebrow, widget: string }
+          - { name: algorithmDesc, label: 알고리즘 설명, widget: string }
+          - { name: serverEyebrow, label: 서버 Eyebrow, widget: string }
+          - { name: serverDesc, label: 서버 설명, widget: string }
+          - { name: languageEyebrow, label: 언어 Eyebrow, widget: string }
+          - { name: languageDesc, label: 언어 설명, widget: string }
+          - {
+              name: languageFilterLabel,
+              label: 언어 필터 접근성 라벨,
+              widget: string,
+            }
+          - { name: mobileEyebrow, label: 모바일 Eyebrow, widget: string }
+          - { name: mobileDesc, label: 모바일 설명, widget: string }
+          - {
+              name: mobileFilterLabel,
+              label: 모바일 필터 접근성 라벨,
+              widget: string,
+            }
+          - {
+              name: subDesc,
+              label: "하위 카테고리 설명 ({{label}} 치환)",
+              widget: string,
+            }
+          - { name: filterAll, label: 필터 전체 항목, widget: string }
+          - { name: empty, label: 글 없음 안내, widget: string }
+      - name: projects
+        label: 프로젝트 페이지
+        widget: object
+        collapsed: true
+        fields:
+          - { name: eyebrow, label: 목록 Eyebrow, widget: string }
+          - { name: detailEyebrow, label: 상세 Eyebrow, widget: string }
+          - { name: description, label: 목록 설명, widget: string }
+          - { name: detailLink, label: 상세 링크 문구, widget: string }
+          - { name: members, label: 구성원 제목, widget: string }
+          - { name: viewOriginal, label: 원본 보기 문구, widget: string }
+          - { name: backToList, label: 목록으로 문구, widget: string }
+      - name: card
+        label: 글 카드
+        widget: object
+        collapsed: true
+        fields:
+          - { name: featured, label: 추천 글 접두어, widget: string }
+      - name: more
+        label: 더보기 토글
+        widget: object
+        collapsed: true
+        fields:
+          - { name: expand, label: 펼치기, widget: string }
+          - { name: collapse, label: 접기, widget: string }
+      - name: postBrowser
+        label: 글 목록 필터
+        widget: object
+        collapsed: true
+        fields:
+          - { name: categoryNav, label: 카테고리 영역 라벨, widget: string }
+          - { name: tagNav, label: 태그 영역 라벨, widget: string }
+          - { name: tagAll, label: 태그 전체 항목, widget: string }
+          - {
+              name: countLabel,
+              label: "글 개수 문구 ({{n}} 치환)",
+              widget: string,
+            }
+          - { name: empty, label: 결과 없음 안내, widget: string }
+          - { name: reset, label: 필터 초기화 버튼, widget: string }
+      - name: search
+        label: 검색
+        widget: object
+        collapsed: true
+        fields:
+          - { name: label, label: 입력창 접근성 라벨, widget: string }
+          - { name: clear, label: 지우기 버튼, widget: string }
+          - { name: loading, label: 검색 중 문구, widget: string }
+          - { name: devNoticeTitle, label: DEV 안내 제목, widget: string }
+          - { name: devNoticeBody, label: DEV 안내 본문, widget: string }
+          - { name: error, label: 오류 문구, widget: string }
+          - {
+              name: resultCount,
+              label: "결과 개수 문구 ({{n}} 치환)",
+              widget: string,
+            }
+          - { name: resultsNav, label: 결과 영역 라벨, widget: string }
+          - { name: more, label: 더 보기 버튼, widget: string }
+      - name: viz
+        label: 시각화 재생 컨트롤
+        widget: object
+        collapsed: true
+        fields:
+          - { name: region, label: 영역 접근성 라벨, widget: string }
+          - { name: first, label: 처음으로, widget: string }
+          - { name: prev, label: 이전 단계, widget: string }
+          - { name: play, label: 재생, widget: string }
+          - { name: pause, label: 일시정지, widget: string }
+          - { name: next, label: 다음 단계, widget: string }
+          - {
+              name: speedLabel,
+              label: "재생 속도 문구 ({{speed}} 치환)",
+              widget: string,
+            }
+          - { name: seek, label: 단계 이동 슬라이더, widget: string }
+
+  - name: i18n_en
+    label: UI 문구 (영어)
+    file: src/data/i18n.en.json
+    icon: translate
+    fields: *i18nFields
+
+  - name: project_sbi_cosmoney
+    label: "프로젝트 상세 · SBI Cosmoney"
+    file: src/data/projects/sbi-cosmoney.json
+    icon: work
+    fields:
+      - { name: title, label: 제목, widget: string }
+      - { name: role, label: 역할, widget: string }
+      - { name: period, label: 기간, widget: string }
+      - name: members
+        label: 참여 인원
+        widget: list
+        field: &memberField { name: member, label: 인원, widget: string }
+      - { name: intro, label: 소개, widget: markdown, required: false }
+      - name: blocks
+        label: 본문 블록
+        widget: list
+        typeKey: t
+        collapsed: true
+        summary: "{{fields.t}}"
+        types: &blockTypes
+          - name: p
+            label: "문단 (p)"
+            fields:
+              - { name: x, label: 내용, widget: markdown }
+          - name: bar
+            label: "강조 바 (bar)"
+            fields:
+              - { name: x, label: 내용, widget: text }
+          - name: ul
+            label: "목록 (ul)"
+            fields:
+              - name: items
+                label: 항목
+                widget: list
+                summary: "{{fields.x}}"
+                fields:
+                  - { name: x, label: 내용, widget: text }
+                  - {
+                      name: sub,
+                      label: 하위 항목,
+                      widget: list,
+                      required: false,
+                      field: { name: item, label: 항목, widget: text },
+                    }
+          - name: h
+            label: "소제목 (h)"
+            fields:
+              - { name: x, label: 내용, widget: string }
+          - name: fig
+            label: "이미지 · 상대경로 (fig)"
+            fields:
+              - {
+                  name: src,
+                  label: 이미지,
+                  widget: image,
+                  media_folder: /src/assets/images,
+                  public_folder: /src/assets/images,
+                }
+              - { name: alt, label: 대체 텍스트, widget: string }
+          - name: svg
+            label: "이미지 · public 경로 (svg)"
+            fields:
+              - {
+                  name: src,
+                  label: 이미지,
+                  widget: image,
+                  media_folder: /public/images/projects,
+                  public_folder: /images/projects,
+                }
+              - { name: w, label: 너비(px), widget: number, value_type: int }
+              - { name: h, label: 높이(px), widget: number, value_type: int }
+              - { name: alt, label: 대체 텍스트, widget: string }
+              - { name: caption, label: 캡션, widget: string, required: false }
+          - name: note
+            label: "참고 (note)"
+            fields:
+              - { name: x, label: 내용, widget: text }
+
+  - name: project_seeu
+    label: "프로젝트 상세 · SeeU"
+    file: src/data/projects/seeu.json
+    icon: work
+    fields:
+      - { name: title, label: 제목, widget: string }
+      - { name: role, label: 역할, widget: string }
+      - { name: period, label: 기간, widget: string }
+      - { name: members, label: 참여 인원, widget: list, field: *memberField }
+      - { name: intro, label: 소개, widget: markdown, required: false }
+      - {
+          name: hero,
+          label: 히어로 이미지,
+          widget: image,
+          required: false,
+          media_folder: /src/assets/images,
+          public_folder: /src/assets/images,
+        }
+      - {
+          name: blocks,
+          label: 본문 블록,
+          widget: list,
+          typeKey: t,
+          collapsed: true,
+          summary: "{{fields.t}}",
+          types: *blockTypes,
+        }
+
+  - name: project_fncy_wallet
+    label: "프로젝트 상세 · FNCY Wallet"
+    file: src/data/projects/fncy-wallet.json
+    icon: work
+    fields:
+      - { name: title, label: 제목, widget: string }
+      - { name: role, label: 역할, widget: string }
+      - { name: period, label: 기간, widget: string }
+      - { name: members, label: 참여 인원, widget: list, field: *memberField }
+      - { name: intro, label: 소개, widget: markdown, required: false }
+      - {
+          name: hero,
+          label: 히어로 이미지,
+          widget: image,
+          required: false,
+          media_folder: /src/assets/images,
+          public_folder: /src/assets/images,
+        }
+      - {
+          name: blocks,
+          label: 본문 블록,
+          widget: list,
+          typeKey: t,
+          collapsed: true,
+          summary: "{{fields.t}}",
+          types: *blockTypes,
+        }
+
+  - name: project_lingerstudio
+    label: "프로젝트 상세 · LingerStudio"
+    file: src/data/projects/lingerstudio.json
+    icon: work
+    fields:
+      - { name: title, label: 제목, widget: string }
+      - { name: role, label: 역할, widget: string }
+      - { name: period, label: 기간, widget: string }
+      - { name: members, label: 참여 인원, widget: list, field: *memberField }
+      - { name: intro, label: 소개, widget: markdown, required: false }
+      - {
+          name: hero,
+          label: 히어로 이미지,
+          widget: image,
+          required: false,
+          media_folder: /src/assets/images,
+          public_folder: /src/assets/images,
+        }
+      - {
+          name: blocks,
+          label: 본문 블록,
+          widget: list,
+          typeKey: t,
+          collapsed: true,
+          summary: "{{fields.t}}",
+          types: *blockTypes,
+        }
+
+  - name: project_kobosys
+    label: "프로젝트 상세 · Kobosys"
+    file: src/data/projects/kobosys.json
+    icon: work
+    fields:
+      - { name: title, label: 제목, widget: string }
+      - { name: role, label: 역할, widget: string }
+      - { name: period, label: 기간, widget: string }
+      - { name: members, label: 참여 인원, widget: list, field: *memberField }
+      - { name: intro, label: 소개, widget: markdown, required: false }
+      - name: hero
+        label: 히어로 이미지 목록
+        widget: list
+        required: false
+        field:
+          {
+            name: image,
+            label: 이미지,
+            widget: image,
+            media_folder: /src/assets/images,
+            public_folder: /src/assets/images,
+          }
+      - {
+          name: blocks,
+          label: 본문 블록,
+          widget: list,
+          typeKey: t,
+          collapsed: true,
+          summary: "{{fields.t}}",
+          types: *blockTypes,
+        }

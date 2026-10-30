@@ -1,0 +1,245 @@
+{
+  "avatarAlt": "TeddKo 아바타",
+  "name": {
+    "ko": "고민혁",
+    "en": "Tedd Ko"
+  },
+  "headline": "문제를 파악할 줄 아는 개발자",
+  "facts": [
+    {
+      "label": "경력",
+      "value": "5년 6개월"
+    },
+    {
+      "label": "전문",
+      "value": "Android · Kotlin · Compose"
+    },
+    {
+      "label": "현재",
+      "value": "SBI COSMONEY"
+    }
+  ],
+  "sections": {
+    "impact": {
+      "eyebrow": "Impact",
+      "headline": "숫자로 보면"
+    },
+    "strengths": {
+      "eyebrow": "Strengths",
+      "headline": "강점"
+    },
+    "experience": {
+      "eyebrow": "Experience",
+      "headline": "경력"
+    },
+    "stack": {
+      "eyebrow": "Stack",
+      "headline": "기술 스택"
+    },
+    "beyondWork": {
+      "eyebrow": "Beyond Work",
+      "headline": "일 밖에서"
+    },
+    "github": {
+      "eyebrow": "GitHub",
+      "headline": "GitHub 통계",
+      "statsAlt": "GitHub 통계",
+      "langsAlt": "주 사용 언어"
+    }
+  },
+  "metrics": [
+    {
+      "n": 4.2,
+      "dec": 1,
+      "suf": "만 줄",
+      "label": "테스트 코드",
+      "span": "col-span-2 lg:col-span-3"
+    },
+    {
+      "n": 70.2,
+      "dec": 1,
+      "suf": "%",
+      "label": "팀 과제 해결 주도 (460/655건)",
+      "span": "col-span-2 lg:col-span-3"
+    },
+    {
+      "n": 24786,
+      "suf": "줄",
+      "label": "레거시 코드 순감소",
+      "span": "col-span-2 sm:col-span-1 lg:col-span-2"
+    },
+    {
+      "n": 100.4,
+      "dec": 1,
+      "suf": "MB",
+      "top": "104.1MB →",
+      "from": 104.1,
+      "label": "APK 용량",
+      "span": "col-span-1 lg:col-span-2"
+    },
+    {
+      "n": 5,
+      "suf": "%",
+      "pre": "<",
+      "top": "80% →",
+      "from": 80,
+      "label": "비정상 종료 비율",
+      "span": "col-span-1 lg:col-span-2"
+    }
+  ],
+  "techGroups": [
+    {
+      "name": "Language",
+      "items": [
+        "Kotlin",
+        "Java",
+        "Dart",
+        "Swift"
+      ],
+      "span": "lg:col-span-2"
+    },
+    {
+      "name": "UI",
+      "items": [
+        "Jetpack Compose",
+        "Android",
+        "Flutter",
+        "CMP",
+        "React Native"
+      ],
+      "span": "lg:col-span-4"
+    },
+    {
+      "name": "Architecture",
+      "items": [
+        "Clean Architecture",
+        "MVW",
+        "Android App Architecture"
+      ],
+      "span": "lg:col-span-2"
+    },
+    {
+      "name": "Async",
+      "items": [
+        "Coroutines",
+        "Flow"
+      ],
+      "span": "lg:col-span-2"
+    },
+    {
+      "name": "Data",
+      "items": [
+        "Room / SQLCipher",
+        "DataStore"
+      ],
+      "span": "lg:col-span-2"
+    },
+    {
+      "name": "Quality & Perf",
+      "items": [
+        "Firebase Crashlytics",
+        "Macrobenchmark",
+        "R8"
+      ],
+      "span": "lg:col-span-3"
+    },
+    {
+      "name": "Connectivity",
+      "items": [
+        "Socket.io",
+        "BLE"
+      ],
+      "span": "lg:col-span-3"
+    },
+    {
+      "name": "AI Tooling",
+      "items": [
+        "Claude (Claude Code)",
+        "ChatGPT (Codex)",
+        "Gemini (Antigravity)",
+        "Kiro",
+        "MCP"
+      ],
+      "span": "sm:col-span-2 lg:col-span-6"
+    }
+  ],
+  "hobbies": [
+    {
+      "name": "키보드 빌드",
+      "icon": "M2.5 7h19a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-19a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1ZM5 10.5h.01M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01M19 10.5h.01M5 14h.01M19 14h.01M8.5 14.5h7"
+    },
+    {
+      "name": "산책",
+      "icon": "M12 13.5c-2.2 0-4 1.8-4 3.6 0 1.4 1.1 2.4 2.5 2.4.6 0 1-.2 1.5-.2s.9.2 1.5.2c1.4 0 2.5-1 2.5-2.4 0-1.800-1.800-3.600-4-3.600ZM5.500 11a1.500 2 0 1 0 0-.01ZM9.500 6.500a1.500 2 0 1 0 0-.01ZM14.500 6.500a1.500 2 0 1 0 0-.01ZM18.500 11a1.500 2 0 1 0 0-.01Z"
+    },
+    {
+      "name": "여행",
+      "icon": "M5 7h14a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1ZM9 7V4.500a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V7M8.500 7v13M15.500 7v13"
+    }
+  ],
+  "highlights": [
+    "레거시 약 2.5만 줄 감축",
+    "금융 보안 체계 확립",
+    "기동 268ms → 54ms",
+    "팀 PR 67.4% (467건)"
+  ],
+  "experiences": [
+    {
+      "company": "SBI COSMONEY",
+      "period": "2026.04 ~ 현재",
+      "body": "해외·국내 송금 금융 플랫폼 안드로이드 앱의 모던 아키텍처 전환과 고도화를 주도하고 있습니다. 레거시 단일 구조를 멀티 모듈(디자인 시스템, 네트워크, SQLCipher Room 등)과 100% Kotlin·Compose 기반 단일 상태(UiState)·순수 리듀서 아키텍처로 개편해 레거시 코드 약 2.5만 줄을 감축했습니다. 보안 키패드 전환, SecureRandom 교체, TLS 검증 복원, R8 로그 스트리핑으로 금융 보안 체계도 확립했고 기동 속도는 Macrobenchmark 계측을 기반으로 최적화했습니다(메인 스레드 268ms→54ms). 배포·릴리즈 노트 자동화 파이프라인도 구축했고 팀 전체 PR의 67.4%(467건)를 100% 마스터 릴리즈에 반영했습니다."
+    },
+    {
+      "company": "메타버스랩스 주식회사",
+      "period": "2023.08 ~ 2025.04",
+      "body": "블록체인 가상자산 지갑 서비스 'FNCY Wallet' 안드로이드 앱의 전면 리팩토링을 주도했습니다. 뒤섞여 있던 Java·Kotlin, XML·Compose 코드베이스를 단계별 로드맵에 따라 100% Kotlin 및 Jetpack Compose로 마이그레이션했습니다. Coroutines·Flow 기반 비동기 데이터 스트림도 정립해 앱 메모리 사용량을 28% 절감하고 UI 반응 속도를 개선했습니다."
+    },
+    {
+      "company": "주식회사 링거스튜디오",
+      "period": "2022.05 ~ 2023.08",
+      "body": "음악 저작인접권 조각투자 및 팬 커뮤니티 플랫폼 '링거스튜디오' 안드로이드 앱의 초기 설계부터 스토어 정식 출시까지 전 과정을 담당했습니다. Kotlin Multiplatform(KMP)과 Jetpack Compose로 공통 비즈니스 로직을 모듈화하고 선언형 UI 기반 아키텍처를 구축했습니다. 앱은 성공적으로 상용화됐습니다."
+    },
+    {
+      "company": "주식회사 코보시스",
+      "period": "2021.11 ~ 2022.05",
+      "body": "스터디카페 예약·결제 플랫폼 '와우플' 안드로이드 앱의 서비스 안정화를 맡았습니다. 화면 간 데이터 전달 오류를 바로잡고 실시간 네트워크 상태 감지와 예외 처리 로직을 다시 설계했습니다. Firebase Crashlytics 기준 80%에 달하던 비정상 종료 비율이 5% 미만(전체 앱 크래시율 1% 미만)으로 크게 내려갔습니다."
+    },
+    {
+      "company": "(주)모바일파트너스 (인시스템즈)",
+      "period": "2017.05 ~ 2017.10",
+      "body": "헬스케어 솔루션 기반의 그린케어, 라이프케어, 탭닥터, 약물관리 등 여러 안드로이드 앱 개발에 참여했습니다. 블루투스(BLE) 외부 측정 기기와의 실시간 연동과 혈압 측정 데이터 전송 로직을 구현했고 센서 기반 걸음 거리 측정 알고리즘은 고도화해 데이터 정확도를 높였습니다."
+    },
+    {
+      "company": "주식회사 어썸게이트",
+      "period": "2017.01 ~ 2017.04",
+      "body": "소셜 데이팅 플랫폼 '리얼리팅' 안드로이드 앱 개발에 참여했습니다. Socket.io 기반 실시간 양방향 이벤트 통신으로 다대다(N:M) 데이팅 매칭과 그룹 채팅 기능을 안정적으로 개발했습니다."
+    },
+    {
+      "company": "(주)스트라스타",
+      "period": "2012.11 ~ 2013.05",
+      "body": "일반 사용자가 쉽게 전자책을 제작할 수 있는 앱 바인딩 플랫폼 '바인드앱(BindApp)'의 안드로이드 개발에 참여했습니다. E-Book 콘텐츠의 페이징 처리와 화면 전환 애니메이션을 고도화하고 전반적인 UI 사용성을 개선했습니다."
+    }
+  ],
+  "otherExperience": {
+    "period": "2025.12 (1개월)",
+    "title": "그 밖의 경력",
+    "company": "Newdots",
+    "description": "프리랜서 — 여행객·가이드 매칭 O2O 'SeeU' Flutter 앱 초기 설계 및 개발"
+  },
+  "language": "언어: 한국어",
+  "statsUsername": "teddko",
+  "contact": {
+    "eyebrow": "Contact",
+    "headline": "함께 문제를 풀어볼까요?",
+    "emailButtonLabel": "이메일 보내기",
+    "email": "tddy.ko@kakao.com",
+    "github": {
+      "url": "https://github.com/TeddKo",
+      "label": "GitHub"
+    },
+    "linkedin": {
+      "url": "https://www.linkedin.com/in/%EB%AF%BC%ED%98%81-%EA%B3%A0-76345428b/",
+      "label": "LinkedIn"
+    }
+  }
+}

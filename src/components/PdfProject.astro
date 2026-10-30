@@ -1,0 +1,233 @@
+---
+import { Picture, getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type Item = { x: string; sub?: string[] };
+export type Block =
+  | { t: "p"; x: string }
+  | { t: "bar"; x: string }
+  | { t: "ul"; items: Item[] }
+  | { t: "h"; x: string }
+  | { t: "fig"; src: string; alt: string }
+  | {
+      t: "svg";
+      src: string;
+      w: number;
+      h: number;
+      alt: string;
+      caption: string;
+    }
+  | { t: "note"; x: string };
+
+interface Props {
+  title: string;
+  role: string;
+  period: string;
+  members: string[];
+  intro: string;
+  hero?: string | string[];
+  blocks: Block[];
+}
+
+const { title, role, period, members, intro, hero, blocks } = Astro.props;
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/images/**/*.{png,jpg,jpeg,gif,webp,avif,svg}",
+  { eager: true }
+);
+// Paths are repo-root absolute ("/src/assets/images/...") so the CMS can write
+// them directly — they match the glob keys with no rewriting on either side.
+const resolveImage = (path: string): ImageMetadata => {
+  const mod = imageModules[path];
+  if (!mod) throw new Error(`PdfProject: image not found: ${path}`);
+  return mod.default;
+};
+const heroes = [hero ?? []].flat().map(resolveImage);
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+const md = (s: string) =>
+  s
+    .replace(/&/g, "&amp;")
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(
+      /`(.+?)`/g,
+      '<code class="rounded bg-black/5 px-1.5 py-0.5 text-[0.9em] text-red-600">$1</code>'
+    );
+const widths = (img: ImageMetadata) =>
+  [640, 1200, 2400].filter(w => w < img.width).concat(img.width);
+const full = async (img: ImageMetadata) =>
+  (
+    await getImage({
+      src: img,
+      width: Math.min(img.width, 2400),
+      format: "webp",
+    })
+  ).src;
+const links = new Map(
+  await Promise.all(
+    blocks.flatMap(b =>
+      b.t === "fig"
+        ? [full(resolveImage(b.src)).then(u => [b.src, u] as const)]
+        : []
+    )
+  )
+);
+---
+
+<Layout title={`${title} | ${config.site.title}`} description={title}>
+  <Header />
+  <Main pageTitle={title} eyebrow={t.projects.detailEyebrow} bare>
+    {
+      heroes.length > 0 && (
+        <div
+          class="app-layout-wide flex flex-col gap-4 md:gap-6"
+          data-reveal="scale"
+        >
+          {heroes.map((h, i) => (
+            <Picture
+              src={h}
+              alt={title}
+              formats={["avif", "webp"]}
+              widths={widths(h)}
+              sizes="(min-width: 1200px) 1200px, 100vw"
+              class="h-auto w-full rounded-[28px]"
+              loading={i === 0 ? "eager" : "lazy"}
+            />
+          ))}
+        </div>
+      )
+    }
+
+    <section class="section-tight">
+      <div class="app-layout grid gap-10 md:grid-cols-[minmax(0,1fr)_2.2fr]">
+        <aside data-reveal>
+          <p class="text-lg">{role}</p>
+          <p class="secondary mt-2 text-lg">{period}</p>
+          <p class="mt-6 text-lg font-bold italic">{t.projects.members}</p>
+          <ul
+            class="border-foreground/60 mt-2 space-y-2 border-s-2 ps-4 text-lg"
+          >
+            {members.map(m => <li>{m}</li>)}
+          </ul>
+        </aside>
+        <div class="space-y-8">
+          <p
+            class="tile text-lg leading-relaxed"
+            data-reveal
+            set:html={md(intro)}
+          />
+          {
+            blocks.map(b =>
+              b.t === "p" ? (
+                <p
+                  class="text-lg leading-relaxed"
+                  data-reveal
+                  set:html={md(b.x)}
+                />
+              ) : b.t === "bar" ? (
+                <p
+                  class="border-foreground/60 border-s-4 ps-4 text-lg leading-relaxed"
+                  data-reveal
+                  set:html={md(b.x)}
+                />
+              ) : b.t === "ul" ? (
+                <ul class="marker:text-accent list-disc space-y-3 ps-5 text-lg leading-relaxed">
+                  {b.items.map(i => (
+                    <li data-reveal>
+                      <span set:html={md(i.x)} />
+                      {i.sub && (
+                        <ul class="mt-3 list-[circle] space-y-3 ps-6">
+                          {i.sub.map(s => (
+                            <li set:html={md(s)} />
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              ) : b.t === "h" ? (
+                <h2 class="headline pt-8" data-reveal>
+                  {b.x}
+                </h2>
+              ) : b.t === "note" ? (
+                <p class="secondary text-sm" data-reveal>
+                  {b.x}
+                </p>
+              ) : b.t === "svg" ? (
+                <figure data-reveal="scale">
+                  <a
+                    href={`${base}${b.src}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="tile tile-paper block overflow-hidden border border-black/10 p-4 sm:p-8"
+                  >
+                    <img
+                      src={`${base}${b.src}`}
+                      alt={b.alt}
+                      width={b.w}
+                      height={b.h}
+                      loading="lazy"
+                      class="mx-auto h-auto max-w-full"
+                    />
+                  </a>
+                  <figcaption class="secondary mt-3 text-center text-sm">
+                    {b.caption} ·{" "}
+                    <a
+                      href={`${base}${b.src}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-accent underline-offset-4 hover:underline"
+                    >
+                      {t.projects.viewOriginal}
+                    </a>
+                  </figcaption>
+                </figure>
+              ) : (
+                <figure data-reveal="scale">
+                  <a
+                    href={links.get(b.src)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="tile tile-paper block overflow-hidden border border-black/10 p-4 sm:p-8"
+                  >
+                    <Picture
+                      src={resolveImage(b.src)}
+                      alt={b.alt}
+                      formats={["webp"]}
+                      widths={widths(resolveImage(b.src))}
+                      sizes="(min-width: 1200px) 900px, 100vw"
+                      loading="lazy"
+                      class="mx-auto h-auto max-w-full"
+                    />
+                  </a>
+                  <figcaption class="secondary mt-3 text-center text-sm">
+                    <a
+                      href={links.get(b.src)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-accent underline-offset-4 hover:underline"
+                    >
+                      {t.projects.viewOriginal}
+                    </a>
+                  </figcaption>
+                </figure>
+              )
+            )
+          }
+        </div>
+      </div>
+    </section>
+
+    <div class="app-layout py-16 sm:py-24">
+      <a href={`${base}/projects/`} class="link-more link-back">
+        {t.projects.backToList}
+      </a>
+    </div>
+  </Main>
+  <Footer />
+</Layout>

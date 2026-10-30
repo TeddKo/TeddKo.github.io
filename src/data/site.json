@@ -1,0 +1,41 @@
+{
+  "site": {
+    "url": "https://teddko.github.io",
+    "title": "TeddKo",
+    "description": "개발자 TeddKo의 개발 기록",
+    "author": "Tedd Ko",
+    "profile": "https://github.com/TeddKo",
+    "ogImage": "default-og.jpg",
+    "lang": "ko",
+    "timezone": "Asia/Seoul",
+    "dir": "ltr"
+  },
+  "posts": {
+    "perPage": 4,
+    "perIndex": 4,
+    "scheduledPostMargin": 900000
+  },
+  "features": {
+    "lightAndDarkMode": true,
+    "dynamicOgImage": true,
+    "showArchives": false,
+    "showBackButton": true,
+    "editPost": {
+      "enabled": true,
+      "url": "https://github.com/TeddKo/TeddKo.github.io/edit/master/"
+    },
+    "search": "pagefind"
+  },
+  "socials": [
+    { "name": "github", "url": "https://github.com/TeddKo" },
+    {
+      "name": "linkedin",
+      "url": "https://www.linkedin.com/in/%EB%AF%BC%ED%98%81-%EA%B3%A0-76345428b/"
+    },
+    { "name": "mail", "url": "mailto:tddy.ko@kakao.com" }
+  ],
+  "shareLinks": [
+    { "name": "x", "url": "https://x.com/intent/post?url=" },
+    { "name": "mail", "url": "mailto:?subject=See%20this%20post&body=" }
+  ]
+}

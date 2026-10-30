@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import CategoryList from "@/components/CategoryList.astro";
+import MobileFilter from "@/components/MobileFilter.astro";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { LANGUAGE_SUBS } from "@/utils/categories";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+const slugs: string[] = [...LANGUAGE_SUBS];
+const posts = getSortedPosts(
+  await getCollection("posts", ({ data }) => slugs.includes(data.category))
+);
+---
+
+<CategoryList
+  title={t.nav.language}
+  eyebrow={t.categories.languageEyebrow}
+  description={t.categories.languageDesc}
+  posts={posts}
+>
+  <MobileFilter
+    subs={LANGUAGE_SUBS}
+    base="language"
+    label={t.categories.languageFilterLabel}
+  />
+</CategoryList>

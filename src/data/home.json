@@ -1,0 +1,69 @@
+{
+  "avatarAlt": "TeddKo 아바타",
+  "hero": {
+    "pre": "문제를",
+    "accent": "파악할 줄 아는",
+    "post": "개발자",
+    "name": "고민혁",
+    "lead": "5년 6개월차 개발자입니다. Kotlin, Jetpack Compose, 멀티 모듈로 레거시를 리팩토링 하고 성능과 보안을 다듬습니다. 자료구조, 알고리즘, 모바일 개발 기록은 이곳에 씁니다."
+  },
+  "cta": {
+    "projects": "Projects",
+    "posts": "글 읽기"
+  },
+  "statement": "대규모 레거시를 걷어내고 측정한 숫자로 성능을 다루며 금융 앱의 보안과 엣지 케이스까지 챙깁니다. AI 워크플로우와 자동화로 팀 생산성을 끌어올리는 일에도 관심이 있습니다. 기술 장벽은 낮추고 지식은 팀의 자산으로 남기려 합니다.",
+  "stats": [
+    {
+      "n": 2.5,
+      "dec": 1,
+      "suf": "만 줄",
+      "label": "레거시 코드 감축",
+      "span": "col-span-2 lg:col-span-4"
+    },
+    {
+      "n": 54,
+      "suf": "ms",
+      "top": "268ms →",
+      "from": 268,
+      "label": "콜드 스타트",
+      "span": "col-span-2 lg:col-span-2"
+    },
+    {
+      "n": 467,
+      "suf": "건",
+      "pre": "PR",
+      "label": "6개월간",
+      "span": "col-span-1 lg:col-span-2"
+    },
+    {
+      "n": 28,
+      "suf": "%",
+      "label": "앱 메모리 절감",
+      "span": "col-span-1 lg:col-span-4"
+    }
+  ],
+  "sections": {
+    "about": {
+      "eyebrow": "About",
+      "moreLabel": "자세히 보기"
+    },
+    "impact": {
+      "eyebrow": "Impact",
+      "headline": "숫자로 보면"
+    },
+    "strengths": {
+      "eyebrow": "Strengths",
+      "headline": "강점",
+      "moreLabel": "자세히 보기"
+    },
+    "posts": {
+      "eyebrow": "Posts",
+      "allLabel": "모든 글 보기"
+    },
+    "projects": {
+      "eyebrow": "Projects",
+      "headline": "만들어 온 것들",
+      "moreLabel": "프로젝트 더 보기"
+    }
+  }
+}

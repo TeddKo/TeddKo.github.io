@@ -1,0 +1,127 @@
+.ds-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.125rem 0.875rem;
+  align-items: baseline;
+  min-height: 1.5em;
+  color: var(--viz-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+.ds-info b {
+  font-weight: 500;
+  color: var(--viz-ink);
+}
+.ds-info .hot {
+  color: var(--viz-accent);
+}
+.ds-info .blue {
+  color: var(--viz-blue);
+}
+.ds-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+.ds-svg text {
+  fill: var(--viz-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.ds-svg .mut {
+  fill: var(--viz-muted);
+}
+.ds-svg .sm {
+  font-size: 12px;
+}
+.ds-svg .inv {
+  fill: var(--background);
+}
+.ds-svg .box {
+  fill: var(--background);
+  stroke: var(--viz-rule);
+  stroke-width: 1.5;
+}
+.ds-svg .empty {
+  fill: none;
+  stroke: var(--viz-rule);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+.ds-svg .cmp {
+  fill: var(--viz-tint);
+  stroke: var(--viz-accent);
+  stroke-width: 2;
+}
+.ds-svg .act {
+  fill: var(--viz-accent);
+  stroke: var(--viz-accent);
+  stroke-width: 2;
+}
+.ds-svg .wr {
+  fill: var(--viz-blue);
+  stroke: var(--viz-blue);
+  stroke-width: 2;
+}
+.ds-svg .seen {
+  fill: var(--viz-tint);
+  stroke: var(--viz-muted);
+  stroke-width: 1.5;
+}
+.ds-svg .new {
+  fill: var(--background);
+  stroke: var(--viz-ink);
+  stroke-width: 2;
+}
+.ds-svg .dim {
+  opacity: 0.35;
+}
+.ds-svg .ln {
+  fill: none;
+  stroke: var(--viz-muted);
+  stroke-width: 1.5;
+}
+.ds-svg .ln.hot {
+  stroke: var(--viz-accent);
+}
+.ds-svg .ah {
+  fill: var(--viz-muted);
+}
+.ds-svg .ah.hot {
+  fill: var(--viz-accent);
+}
+.ds-svg .pill {
+  fill: var(--background);
+  stroke: var(--viz-muted);
+  stroke-width: 1.5;
+}
+.ds-svg .pill.hot {
+  stroke: var(--viz-accent);
+}
+.ds-svg text.hot {
+  fill: var(--viz-accent);
+}
+.ds-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+  min-height: 1.75rem;
+  color: var(--viz-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+.ds-chips span {
+  min-width: 1.75rem;
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--viz-rule);
+  border-radius: 4px;
+  color: var(--viz-ink);
+  text-align: center;
+}
+.ds-chips span.on {
+  border-color: var(--viz-accent);
+  background: var(--viz-accent);
+  color: var(--background);
+}

@@ -1,0 +1,117 @@
+{
+  "title": "Newdots | SeeU",
+  "role": "Flutter Developer",
+  "period": "2025.12",
+  "members": ["Flutter 1명", "BackEnd 2명"],
+  "intro": "Newdosts Corp.의 여행객과 가이드의 매칭 O2O 서비스 ‘SeeU’의 Flutter 앱개발 프로젝트 입니다.",
+  "hero": "/src/assets/images/projects/seeu/hero.png",
+  "blocks": [
+    {
+      "t": "p",
+      "x": "앱의 아키텍처와 디자인패턴, 사용할 라이브러리 선택까지 전부 처음부터 기획하고 개발하여 **이용자가 불편함 없이 사용할 수 있는것에 초점을 맞추고 개발하였습니다.**"
+    },
+    {
+      "t": "bar",
+      "x": "**CleanArchitecture, MVI 패턴 기반 MonoRepo 구조로 설계하였습니다.**"
+    },
+    {
+      "t": "ul",
+      "items": [
+        {
+          "x": "Melos를 활용해 프로젝트를 **core, domain, data, feature 계층으로 분리**한 **MonoRepo 환경을 구축**하고 Riverpod과 Freezed를 결합한 Intent 기반 MVI 패턴을 도입하였습니다.",
+          "sub": [
+            "비즈니스 로직과 UI의 의존성을 분리하여 코드 재사용성을 높였으며 대규모 프로젝트에서도 **유지보수가 용이한 Architecture 표준을 수립하였습니다.**"
+          ]
+        }
+      ]
+    },
+    {
+      "t": "bar",
+      "x": "SOLID 원칙을 준수하여 **위젯이 도메인 객체나 비즈니스 로직에 직접 의존하지 않도록 하였습니다.**"
+    },
+    {
+      "t": "ul",
+      "items": [
+        {
+          "x": "위젯 재사용성과 테스트 용이성을 확보하고 **파라미터만으로 데이터 흐름을 파악할 수 있는 직관적인 코드 베이스를 구축했습니다.**",
+          "sub": [
+            "Domain Entity 대신 Primitive Type을 위젯에 주입하고 **의존성 역전을 통해 레이어 간 결합도를 낮췄습니다.**"
+          ]
+        }
+      ]
+    },
+    {
+      "t": "bar",
+      "x": "토큰 자동 갱신 및 Keychain 데이터 관리로 인증 시스템의 **신뢰성을 확보**했습니다."
+    },
+    {
+      "t": "ul",
+      "items": [
+        {
+          "x": "401에러 발생 시 자동으로 토큰을 갱신하는 인터셉터와 iOS 앱 재설치 시 잔류 데이터를 정리하는 **FirstLaunchService를 구현**했습니다.",
+          "sub": [
+            "사용자 로그인 상태를 안정적으로 유지하고 플랫폼 특유의 보안 저장소 이슈를 해결해 **비정상 동작을 사전에 차단했습니다.**"
+          ]
+        }
+      ]
+    },
+    {
+      "t": "bar",
+      "x": "탭별 독립 로딩 상태 관리로 **끊김 없고 쾌적한 사용자 인터페이스를 구현했습니다.**"
+    },
+    {
+      "t": "ul",
+      "items": [
+        {
+          "x": "전역 로딩 대신 각 **탭별로 독립적인 isLoading 상태를 부여하고 Pull to Refresh와 연동하여 세밀하게 제어**했습니다.",
+          "sub": [
+            "특정 탭의 데이터 로딩이 전체 화면에 영향을 주지 않도록 하여 **사용자가 느끼는 앱의 반응속도와 사용성을 높였습니다.**"
+          ]
+        }
+      ]
+    },
+    {
+      "t": "h",
+      "x": "SeeU 아키텍처 다이어그램"
+    },
+    {
+      "t": "fig",
+      "src": "/src/assets/images/projects/seeu/architecture.png",
+      "alt": "SeeU 아키텍처 다이어그램"
+    },
+    {
+      "t": "fig",
+      "src": "/src/assets/images/projects/seeu/monorepo.png",
+      "alt": "SeeU MonoRepo 구조"
+    },
+    {
+      "t": "ul",
+      "items": [
+        {
+          "x": "Melos를 사용하여 MonoRepo를 구축해 관심사를 분리하고 코드재사용성을 높여 유지보수성을 향상"
+        },
+        {
+          "x": "CleanArchitecture 패턴을 따라 관심사를 분리하고 추상화에 의존하는 의존성 역전의 원칙을 준수"
+        }
+      ]
+    },
+    {
+      "t": "fig",
+      "src": "/src/assets/images/projects/seeu/mvi-sequence.png",
+      "alt": "SeeU MVI 시퀀스 다이어그램"
+    },
+    {
+      "t": "ul",
+      "items": [
+        {
+          "x": "MVI 디자인 패턴을 사용하여 UDF(단방향 흐름)를 적용",
+          "sub": [
+            "데이터가 항상 **Intent → ViewModel → State → View**의 순서로 한 방향으로만 흐르게 처리",
+            "Freezed를 사용하여 상태를 Immutable(불변)하게 관리",
+            "비즈니스 로직과 UI 렌더링 로직을 엄격하게 분리"
+          ]
+        }
+      ]
+    }
+  ]
+}

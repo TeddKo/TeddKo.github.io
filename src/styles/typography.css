@@ -1,0 +1,208 @@
+@plugin "@tailwindcss/typography";
+
+@layer base {
+  /* ===== Article prose: Apple newsroom feel ===== */
+  .app-prose {
+    @apply prose;
+    font-size: 1.1875rem;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    th {
+      @apply text-foreground;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      font-size: 1.85em;
+      line-height: 1.15;
+      margin-top: 2.6em;
+      margin-bottom: 0.7em;
+    }
+
+    h3 {
+      font-size: 1.35em;
+      line-height: 1.25;
+      margin-top: 2em;
+      margin-bottom: 0.5em;
+    }
+
+    p,
+    strong,
+    ol,
+    ul,
+    figcaption,
+    table,
+    code {
+      @apply text-foreground;
+    }
+
+    p {
+      margin-block: 1.1em;
+    }
+
+    a {
+      @apply text-accent wrap-break-word underline decoration-transparent underline-offset-4 transition-colors hover:decoration-current focus-visible:no-underline;
+    }
+
+    ul {
+      @apply overflow-x-clip;
+    }
+
+    li {
+      @apply marker:text-accent;
+    }
+
+    hr {
+      @apply border-border;
+      margin-block: 3em;
+    }
+
+    img {
+      @apply mx-auto block;
+      border-radius: 1.25rem;
+      background: #fff;
+      margin-block: 2em;
+      max-width: 100%;
+      height: auto;
+    }
+
+    svg,
+    video,
+    iframe {
+      max-width: 100%;
+    }
+
+    pre,
+    .katex-display {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    img[role="button"] {
+      @apply cursor-zoom-in;
+
+      &:focus-visible {
+        @apply outline-2 outline-offset-2 outline-solid;
+      }
+    }
+
+    figcaption {
+      @apply text-muted-foreground text-center text-sm;
+    }
+
+    table {
+      @apply w-full text-base;
+      border-collapse: collapse;
+
+      th,
+      td {
+        @apply border-border border-0 border-b px-3 py-3;
+      }
+
+      th {
+        @apply text-muted-foreground text-sm font-semibold;
+        border-bottom-width: 1px;
+        vertical-align: bottom;
+      }
+
+      th[align="center"],
+      td[align="center"] {
+        text-align: center;
+      }
+
+      th[align="right"],
+      td[align="right"] {
+        text-align: right;
+      }
+
+      th[align="left"],
+      td[align="left"] {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 640px) {
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+
+    code {
+      background: var(--code-bg);
+      font-size: 0.86em;
+      @apply text-foreground rounded-md px-1.5 py-0.5 wrap-break-word before:content-none after:content-none;
+    }
+
+    .astro-code code {
+      @apply flex-[1_0_100%] bg-inherit p-0;
+      font-size: 0.8em;
+      line-height: 1.7;
+    }
+
+    blockquote {
+      @apply border-s-accent wrap-break-word;
+      border-inline-start-width: 2px;
+      font-style: normal;
+      font-weight: 500;
+      color: var(--muted-foreground);
+      padding-inline-start: 1.25em;
+
+      p {
+        color: inherit;
+      }
+      p::before,
+      p::after {
+        content: none;
+      }
+    }
+
+    details:not(.callout) {
+      @apply text-foreground inline-block cursor-pointer select-none [&_p]:hidden [&_ul]:my-0!;
+    }
+
+    summary {
+      @apply focus-visible:outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-solid;
+    }
+
+    pre {
+      @apply focus-visible:outline-accent focus-visible:outline-2 focus-visible:outline-solid;
+    }
+  }
+
+  /* ===== Code Blocks & Syntax Highlighting ===== */
+  .astro-code {
+    @apply flex bg-(--shiki-light-bg) text-(--shiki-light) [&_span]:text-(--shiki-light);
+    background-color: var(--code-bg) !important;
+    border-radius: 1.125rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  html[data-theme="dark"] .astro-code {
+    @apply bg-(--shiki-dark-bg) text-(--shiki-dark) [&_span]:text-(--shiki-dark);
+    background-color: var(--code-bg) !important;
+  }
+
+  /* Styles for Shiki transformers */
+  /* https://shiki.style/packages/transformers */
+  .astro-code {
+    .line.diff.add {
+      @apply relative inline-block w-full bg-green-400/20 before:absolute before:-left-3 before:text-green-500 before:content-['+'];
+    }
+    .line.diff.remove {
+      @apply relative inline-block w-full bg-red-500/20 before:absolute before:-left-3 before:text-red-500 before:content-['-'];
+    }
+    .line.highlighted {
+      @apply inline-block w-full bg-slate-400/20;
+    }
+    .highlighted-word {
+      @apply border-border rounded-sm border px-0.5 py-px;
+    }
+  }
+}

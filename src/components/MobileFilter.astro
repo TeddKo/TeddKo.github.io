@@ -1,0 +1,43 @@
+---
+import { MOBILE_SUBS, type Category } from "@/utils/categories";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type Props = {
+  current?: string;
+  subs?: readonly Category[];
+  base?: string;
+  label?: string;
+};
+
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+const {
+  current,
+  subs = MOBILE_SUBS,
+  base = "mobile",
+  label = t.categories.mobileFilterLabel,
+} = Astro.props;
+const root = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+const items = [
+  { href: `${root}${base}/`, label: t.categories.filterAll, slug: undefined },
+  ...subs.map(slug => ({
+    href: `${root}${base}/${slug}/`,
+    label: t.categories.labels[slug],
+    slug: slug as string | undefined,
+  })),
+];
+---
+
+<nav class="mb-8 sm:mb-10" aria-label={label}>
+  <ul class="segmented">
+    {
+      items.map(({ href, label, slug }) => (
+        <li>
+          <a href={href} aria-current={slug === current ? "page" : undefined}>
+            {label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
