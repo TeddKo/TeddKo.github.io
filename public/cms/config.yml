@@ -3,8 +3,8 @@ backend:
   name: github
   repo: TeddKo/TeddKo.github.io
   branch: master
-  # 원격 편집용 OAuth 워커 URL. 배포 후 주석 해제하고 채울 것 — docs/cms-setup.md 참고
-  # base_url: https://sveltia-cms-auth.<서브도메인>.workers.dev
+  # 원격 편집용 OAuth 워커 — docs/cms-setup.md 참고
+  base_url: https://sveltia-cms-auth.tddy-ko-83e.workers.dev
 
 media_folder: src/assets/images
 public_folder: "@/assets/images"
