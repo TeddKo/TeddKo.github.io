@@ -1,0 +1,39 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Main from "@/components/Main.astro";
+import Card from "@/components/Card.astro";
+import Footer from "@/components/Footer.astro";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type Props = {
+  title: string;
+  description: string;
+  eyebrow?: string;
+  posts: CollectionEntry<"posts">[];
+};
+
+const { title, description, eyebrow, posts } = Astro.props;
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+---
+
+<Layout title={`${title} | ${config.site.title}`} description={description}>
+  <Header />
+  <Main pageTitle={title} pageDesc={description} {eyebrow} wide>
+    <slot />
+    {
+      posts.length > 0 ? (
+        <ul class="tile-grid tile-grid-3">
+          {posts.map((data, i) => (
+            <Card {...data} index={i % 3} />
+          ))}
+        </ul>
+      ) : (
+        <p class="secondary">{t.categories.empty}</p>
+      )
+    }
+  </Main>
+  <Footer />
+</Layout>

@@ -1,0 +1,20 @@
+---
+// Sveltia CMS admin UI. Kept as a real Astro page (not a static file in public/)
+// so that `/cms/` resolves in `astro dev` too — the dev server routes directory
+// requests through the router and would 404 on a public/ index.html.
+// The CMS config lives at public/cms/config.yml, fetched at runtime.
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Sveltia CMS</title>
+  </head>
+  <body>
+    <script is:inline src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+---
+import PdfProject from "@/components/PdfProject.astro";
+import type { Block } from "@/components/PdfProject.astro";
+import data from "@/data/projects/sbi-cosmoney.json";
+import { projects } from "@/data/projects";
+
+const { description } = projects.find(
+  p => p.detailUrl === "/projects/sbi-cosmoney/"
+)!;
+---
+
+<PdfProject {...data} intro={description} blocks={data.blocks as Block[]} />

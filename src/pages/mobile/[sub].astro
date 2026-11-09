@@ -1,0 +1,34 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import CategoryList from "@/components/CategoryList.astro";
+import MobileFilter from "@/components/MobileFilter.astro";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { MOBILE_SUBS } from "@/utils/categories";
+import { useTranslations, tplStr } from "@/i18n";
+import config from "@/config";
+
+export const getStaticPaths = (async () => {
+  const all = await getCollection("posts");
+  return MOBILE_SUBS.map(slug => ({
+    params: { sub: slug },
+    props: {
+      slug,
+      posts: getSortedPosts(all.filter(({ data }) => data.category === slug)),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { slug, posts } = Astro.props;
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+const label = t.categories.labels[slug];
+---
+
+<CategoryList
+  title={label}
+  eyebrow={t.categories.mobileEyebrow}
+  description={tplStr(t.categories.subDesc, { label })}
+  posts={posts}
+>
+  <MobileFilter current={slug} />
+</CategoryList>

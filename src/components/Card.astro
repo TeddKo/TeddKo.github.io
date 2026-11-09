@@ -1,0 +1,50 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getPostUrl } from "@/utils/getPostPaths";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+import Datetime from "./Datetime.astro";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type Props = {
+  variant?: "h2" | "h3";
+  /** Spans two columns on wide grids. */
+  large?: boolean;
+  /** Reveal stagger index. */
+  index?: number;
+} & CollectionEntry<"posts">;
+
+const {
+  variant: Heading = "h2",
+  large = false,
+  index = 0,
+  id,
+  data,
+  filePath,
+} = Astro.props;
+
+const { title, description, category, ...props } = data;
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+---
+
+<li
+  class:list={["tile flex flex-col", { "lg:col-span-2": large }]}
+  style={`--i:${index}`}
+  data-reveal
+>
+  <p class="eyebrow eyebrow-quiet text-base!">
+    {data.featured && <span class="text-accent">{t.card.featured}</span>}
+    {t.categories.labels[category]}
+  </p>
+  <Heading
+    class:list={["tile-title mt-2", { "sm:text-3xl": large }]}
+    transition:name={toTransitionName(id)}
+  >
+    <a href={getPostUrl(id, filePath, Astro.currentLocale)} class="tile-link">
+      {title}
+    </a>
+  </Heading>
+  <p class="secondary clamp-3 mt-3 text-base">{description}</p>
+  <Datetime {...props} class="mt-auto pt-5" />
+</li>

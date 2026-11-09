@@ -1,0 +1,18 @@
+---
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type Props = { label?: string };
+const { label = "" } = Astro.props;
+const t = useTranslations(Astro.currentLocale ?? config.site.lang);
+---
+
+<details class="more">
+  <summary>
+    <span class="more-on">{t.more.expand}</span><span class="more-off"
+      >{t.more.collapse}</span
+    >
+    {label && <span class="sr-only">: {label}</span>}
+  </summary>
+  <div class="more-body"><slot /></div>
+</details>

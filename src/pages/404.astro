@@ -1,0 +1,30 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+---
+
+<Layout title={`${t.notFound.title} | ${config.site.title}`}>
+  <Header />
+
+  <main
+    id="main-content"
+    class="app-layout flex flex-1 items-center justify-center py-24 text-center"
+  >
+    <div class="flex flex-col items-center">
+      <p class="eyebrow">404</p>
+      <h1 class="display mt-3">{t.notFound.message}</h1>
+      <a href={getRelativeLocaleUrl(locale, "")} class="btn mt-10">
+        {t.notFound.goHome}
+      </a>
+    </div>
+  </main>
+
+  <Footer noMarginTop />
+</Layout>

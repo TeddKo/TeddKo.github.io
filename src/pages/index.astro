@@ -1,0 +1,288 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import IconRss from "@/assets/icons/IconRss.svg";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Socials from "@/components/Socials.astro";
+import Card from "@/components/Card.astro";
+import ScrollHighlight from "@/components/ScrollHighlight.astro";
+import { Image } from "astro:assets";
+import avatar from "@/assets/images/avatar.png";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { projects } from "@/data/projects";
+import { skills } from "@/data/skills";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+import home from "@/data/home.json";
+
+const { socials, posts: postsConfig } = config;
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+const posts = await getCollection("posts");
+const sortedPosts = getSortedPosts(posts);
+const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
+const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+const shownPosts = [
+  ...featuredPosts,
+  ...recentPosts.slice(0, postsConfig.perIndex),
+];
+
+const statement = home.statement;
+
+const stats = home.stats;
+
+const homePath = getRelativeLocaleUrl(locale, "");
+const aboutUrl = getRelativeLocaleUrl(locale, "about");
+const projectsUrl = getRelativeLocaleUrl(locale, "projects");
+const postsUrl = getRelativeLocaleUrl(locale, "posts");
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+const teaser = projects.slice(0, 3);
+---
+
+<Layout>
+  <Header />
+  <main
+    id="main-content"
+    data-layout="index"
+    data-home-path={homePath}
+    class="flex-1"
+  >
+    <section id="hero" class="overflow-hidden pt-14 pb-24 sm:pt-24 sm:pb-40">
+      <div class="app-layout text-center" data-hero-away>
+        <div data-load style="--i:0">
+          <Image
+            src={avatar}
+            alt={home.avatarAlt}
+            width={200}
+            height={200}
+            class="mx-auto size-32 rounded-full object-cover shadow-[0_24px_60px_rgb(0_0_0/0.22)] sm:size-44"
+          />
+        </div>
+        <h1
+          class="display mx-auto mt-8 max-w-4xl text-balance"
+          data-load
+          style="--i:2"
+        >
+          {
+            /* Spaces live here, not in the data: the CMS trims leading and
+              trailing whitespace from every string field on save. */
+          }
+          {home.hero.pre}{" "}<span class="gradient-text"
+            >{home.hero.accent}</span
+          >{" "}{home.hero.post}
+        </h1>
+        <p class="lead mx-auto mt-6 max-w-2xl" data-load style="--i:3">
+          <strong class="text-foreground font-semibold">{home.hero.name}</strong
+          >{" · "}{home.hero.lead}
+        </p>
+        <div
+          class="mt-9 flex flex-wrap items-center justify-center gap-x-8 gap-y-4"
+          data-load
+          style="--i:4"
+        >
+          <a href={projectsUrl} class="btn">{home.cta.projects}</a>
+          <a href={postsUrl} class="link-more">{home.cta.posts}</a>
+        </div>
+        {
+          socials.length > 0 && (
+            <div
+              class="secondary mt-10 flex items-center justify-center gap-1 text-sm"
+              data-load
+              style="--i:5"
+            >
+              <span class="me-1">{t.home.socialLinks}</span>
+              <Socials />
+              <a
+                href={`${base}/rss.xml`}
+                target="_blank"
+                class="p-1"
+                aria-label="RSS Feed"
+                title="RSS Feed"
+              >
+                <IconRss
+                  width={20}
+                  height={20}
+                  class="inline-block size-6 stroke-current stroke-2"
+                />
+                <span class="sr-only">RSS Feed</span>
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </section>
+
+    <section id="statement" class="section pt-0!">
+      <div class="app-layout">
+        <p class="eyebrow mb-6" data-reveal>{home.sections.about.eyebrow}</p>
+        <ScrollHighlight
+          text={statement}
+          class="text-[clamp(1.5rem,3.6vw,2.75rem)] leading-[1.3] font-bold tracking-[-0.025em]"
+        />
+        <a href={aboutUrl} class="link-more mt-10" data-reveal
+          >{home.sections.about.moreLabel}</a
+        >
+      </div>
+    </section>
+
+    <section id="highlights" class="section section-alt">
+      <div class="app-layout-wide">
+        <div class="mb-12 sm:mb-16" data-reveal>
+          <p class="eyebrow">{home.sections.impact.eyebrow}</p>
+          <h2 class="headline mt-2">{home.sections.impact.headline}</h2>
+        </div>
+        <ul class="grid grid-cols-2 gap-4 lg:grid-cols-6">
+          {
+            stats.map(({ top, pre, n, dec, from, suf, label, span }, i) => (
+              <li
+                class:list={["tile flex flex-col justify-between", span]}
+                style={`--i:${i}`}
+                data-reveal
+              >
+                <p class="secondary text-lg font-medium">{label}</p>
+                <p class="mt-10 font-bold tracking-[-0.03em] tabular-nums sm:mt-14">
+                  {top && (
+                    <span class="secondary block text-xl font-semibold sm:text-2xl">
+                      {top}
+                    </span>
+                  )}
+                  <span class="text-[clamp(1.75rem,5.4vw,4rem)] leading-none sm:whitespace-nowrap">
+                    {pre}
+                    <span data-count={n} data-dec={dec} data-from={from}>
+                      {dec ? n.toFixed(dec) : n}
+                    </span>
+                    <span class="text-[0.6em]">{suf}</span>
+                  </span>
+                </p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <div class="app-layout-wide">
+        <div class="mb-12 sm:mb-16" data-reveal>
+          <p class="eyebrow">{home.sections.strengths.eyebrow}</p>
+          <h2 class="headline mt-2">{home.sections.strengths.headline}</h2>
+        </div>
+        <ul class="tile-grid tile-grid-3">
+          {
+            skills.map(({ eyebrow, title, body }, i) => (
+              <li
+                class:list={[
+                  "tile flex flex-col",
+                  { "tile-ink lg:col-span-2": i === 0 },
+                ]}
+                style={`--i:${i % 3}`}
+                data-reveal
+              >
+                <p class="eyebrow">{eyebrow}</p>
+                <h3 class="tile-title mt-2 sm:text-3xl">{title}</h3>
+                <p
+                  class:list={[
+                    "secondary mt-3 text-base",
+                    i === 0 ? "clamp-5" : "clamp-3",
+                  ]}
+                >
+                  {body}
+                </p>
+                <a
+                  href={`${aboutUrl}#skills`}
+                  class="tile-link link-more mt-auto pt-6"
+                >
+                  {home.sections.strengths.moreLabel}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    {
+      shownPosts.length > 0 && (
+        <section id="posts" class="section section-alt">
+          <div class="app-layout-wide">
+            <div class="mb-12 flex items-end justify-between gap-6 sm:mb-16">
+              <div data-reveal>
+                <p class="eyebrow">{home.sections.posts.eyebrow}</p>
+                <h2 class="headline mt-2">{t.home.recentPosts}</h2>
+              </div>
+              <a href={postsUrl} class="link-more max-sm:hidden">
+                {home.sections.posts.allLabel}
+              </a>
+            </div>
+            <ul class="tile-grid tile-grid-3">
+              {shownPosts.map((data, i) => (
+                <Card
+                  variant="h3"
+                  {...data}
+                  index={i % 3}
+                  large={i === 0 && !!data.data.featured}
+                />
+              ))}
+            </ul>
+            <a href={postsUrl} class="link-more mt-10 sm:hidden">
+              {home.sections.posts.allLabel}
+            </a>
+          </div>
+        </section>
+      )
+    }
+
+    <section id="projects" class="section">
+      <div class="app-layout-wide">
+        <div class="mb-12 flex items-end justify-between gap-6 sm:mb-16">
+          <div data-reveal>
+            <p class="eyebrow">{home.sections.projects.eyebrow}</p>
+            <h2 class="headline mt-2">{home.sections.projects.headline}</h2>
+          </div>
+          <a href={projectsUrl} class="link-more max-sm:hidden">
+            {home.sections.projects.moreLabel}
+          </a>
+        </div>
+        <ul class="tile-grid tile-grid-3">
+          {
+            teaser.map(({ title, period, description, tags }, i) => (
+              <li class="tile flex flex-col" style={`--i:${i}`} data-reveal>
+                <p class="eyebrow eyebrow-quiet text-base!">{period}</p>
+                <h3 class="tile-title mt-2">
+                  <a href={projectsUrl} class="tile-link">
+                    {title}
+                  </a>
+                </h3>
+                <p class="secondary clamp-3 mt-3 text-base">{description}</p>
+                <ul class="mt-auto flex flex-wrap gap-2 pt-5">
+                  {tags.slice(0, 3).map(tag => (
+                    <li class="chip">{tag}</li>
+                  ))}
+                </ul>
+              </li>
+            ))
+          }
+        </ul>
+        <a href={projectsUrl} class="link-more mt-10 sm:hidden">
+          {home.sections.projects.moreLabel}
+        </a>
+      </div>
+    </section>
+  </main>
+  <Footer noMarginTop />
+</Layout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
+      ?.dataset;
+    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+    if (indexLayout?.layout) {
+      sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
+    }
+  });
+</script>

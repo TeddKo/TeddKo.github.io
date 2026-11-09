@@ -1,0 +1,19 @@
+---
+type Props = { text: string; class?: string };
+
+const { text, class: className } = Astro.props;
+const words = text.split(/\s+/).filter(Boolean);
+---
+
+<p class:list={["hl", className]} style={`--n:${words.length}`}>
+  {
+    words.map((word, i) => (
+      <>
+        <span class="hl-word" style={`--i:${i}`}>
+          {word}
+        </span>
+        {i < words.length - 1 && " "}
+      </>
+    ))
+  }
+</p>

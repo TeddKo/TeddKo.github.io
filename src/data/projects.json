@@ -1,0 +1,68 @@
+[
+  {
+    "title": "AI 개발 하네스",
+    "period": "SBI COSMONEY · 2026.04 ~ 현재",
+    "description": "Claude(Claude Code), ChatGPT(Codex), Gemini(Antigravity), Kiro 등 여러 AI 도구를 써 왔고, Claude Code에 Plugin과 MCP를 연동하고 Hooks로 컨벤션 검사와 테스트를 강제하는 멀티 에이전트 개발 환경을 만들었습니다. 교차 검증 파이프라인으로 AI의 할루시네이션을 줄였습니다.",
+    "tags": ["Claude Code", "Codex", "Antigravity", "Kiro", "MCP", "Hooks"]
+  },
+  {
+    "title": "SBI Cosmoney",
+    "period": "SBI COSMONEY · 2026.04 ~ 현재",
+    "description": "한국 거주 외국인이 11개 언어로 본국에 송금하는 글로벌 송금 앱 'SBI Cosmoney'의 안드로이드 앱 개발 프로젝트입니다.",
+    "tags": [
+      "Kotlin",
+      "Jetpack Compose",
+      "멀티 모듈",
+      "SQLCipher Room",
+      "Macrobenchmark",
+      "R8"
+    ],
+    "detailUrl": "/projects/sbi-cosmoney/"
+  },
+  {
+    "title": "SeeU",
+    "period": "Newdots (프리랜서) · 2025.12 (1개월)",
+    "description": "Newdosts Corp.의 여행객과 가이드의 매칭 O2O 서비스 ‘SeeU’의 Flutter 앱개발 프로젝트 입니다.",
+    "tags": ["Flutter"],
+    "detailUrl": "/projects/seeu/"
+  },
+  {
+    "title": "FNCY Wallet 리팩토링",
+    "period": "메타버스랩스 · 2023.08 ~ 2025.04",
+    "description": "넷마블 F&C의 FNCY 코인을 비롯하여 비트코인, 이더리움 등 주요 가상자산을 안전하게 관리하고 WEB3 오픈마켓 거래를 할 수 있는 멀티코인 블록체인 지갑 'FncyWallet' 안드로이드 앱 개발 프로젝트입니다.",
+    "tags": ["Kotlin", "Jetpack Compose", "Coroutines", "Flow"],
+    "detailUrl": "/projects/fncy-wallet/"
+  },
+  {
+    "title": "링거스튜디오",
+    "period": "링거스튜디오 · 2022.05 ~ 2023.08",
+    "description": "음원 저작인접권을 조각 단위로 구매하고, 아티스트와의 특별한 경험이 담긴 NFT를 소유 및 거래할 수 있는 서비스 'LingerStudio'의 안드로이드 앱 개발 프로젝트입니다.",
+    "tags": ["Kotlin Multiplatform", "Jetpack Compose"],
+    "detailUrl": "/projects/lingerstudio/"
+  },
+  {
+    "title": "Wowple · Baroder · Milkitchelin",
+    "period": "코보시스 · 2021.11 ~ 2022.05",
+    "description": "스터디카페 예약/결제(와우플) 및 무인 밀키트 매장(바로더, 밀킷슐랭) 등 오프라인 키오스크와 연동되는 O2O 서비스의 안드로이드 및 플러터 앱 개발 프로젝트입니다.",
+    "tags": ["Android", "Flutter", "Firebase Crashlytics"],
+    "detailUrl": "/projects/kobosys/"
+  },
+  {
+    "title": "헬스케어 앱 (그린케어·라이프케어·탭닥터)",
+    "period": "모바일파트너스(인시스템즈) · 2017.05 ~ 2017.10",
+    "description": "그린케어, 라이프케어, 탭닥터, 약물관리 등 헬스케어 앱 개발에 참여했습니다. BLE 측정 기기와의 실시간 연동, 혈압 측정 데이터 전송, 센서 기반 걸음 거리 측정 알고리즘을 구현했습니다.",
+    "tags": ["Android", "BLE"]
+  },
+  {
+    "title": "리얼리팅",
+    "period": "어썸게이트 · 2017.01 ~ 2017.04",
+    "description": "소셜 데이팅 앱입니다. Socket.io 기반 실시간 양방향 이벤트 통신으로 다대다(N:M) 데이팅 매칭과 그룹 채팅을 구현했습니다.",
+    "tags": ["Android", "Socket.io"]
+  },
+  {
+    "title": "바인드앱 (BindApp)",
+    "period": "스트라스타 · 2012.11 ~ 2013.05",
+    "description": "일반 사용자가 쉽게 전자책을 만들 수 있는 앱 바인딩 플랫폼입니다. E-Book 콘텐츠 페이징 처리와 화면 전환 애니메이션을 고도화했습니다.",
+    "tags": ["Android", "E-Book"]
+  }
+]

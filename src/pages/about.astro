@@ -1,0 +1,437 @@
+---
+import { getEntry } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import ScrollHighlight from "@/components/ScrollHighlight.astro";
+import More from "@/components/More.astro";
+import { Image } from "astro:assets";
+import avatar from "@/assets/images/avatar.png";
+import { skills } from "@/data/skills";
+import config from "@/config";
+import about from "@/data/about.json";
+
+const aboutEntry = await getEntry("pages", "about");
+
+if (!aboutEntry) {
+  throw new Error(
+    "Missing content entry: `about.md` or `about.mdx` in `src/content/pages/`"
+  );
+}
+
+const intro = (aboutEntry.body ?? "").trim();
+
+const splitFirst = (text: string) => {
+  const i = text.indexOf("다. ");
+  return i < 0
+    ? { first: text, rest: "" }
+    : { first: text.slice(0, i + 2), rest: text.slice(i + 3) };
+};
+
+const statsBase = "https://github-stats-extended.vercel.app/api";
+const stats =
+  `${statsBase}?username=${about.statsUsername}&show_icons=true&hide=contribs&include_all_commits=true&locale=kr&hide_border=true&border_radius=12&rank_icon=github` +
+  "&bg_color_light=F5F5F7&title_color_light=7C3AED&text_color_light=1D1D1F&icon_color_light=7C3AED&ring_color_light=7C3AED" +
+  "&bg_color_dark=1D1D1F&title_color_dark=A78BFA&text_color_dark=F5F5F7&icon_color_dark=A78BFA&ring_color_dark=A78BFA";
+const topLangs =
+  `${statsBase}/top-langs/?username=${about.statsUsername}&layout=compact&langs_count=6&locale=kr&hide_border=true&border_radius=12` +
+  "&bg_color_light=F5F5F7&title_color_light=7C3AED&text_color_light=1D1D1F" +
+  "&bg_color_dark=1D1D1F&title_color_dark=A78BFA&text_color_dark=F5F5F7";
+---
+
+<Layout
+  title={`${aboutEntry.data.title} | ${config.site.title}`}
+  description={aboutEntry.data.description}
+  ogImage={aboutEntry.data.ogImage}
+  canonicalURL={aboutEntry.data.canonicalURL}
+>
+  <Header />
+
+  <main id="main-content" class="flex-1">
+    <section class="pt-14 pb-12 text-center sm:pt-24 sm:pb-16">
+      <div class="app-layout">
+        <div data-load style="--i:0">
+          <Image
+            src={avatar}
+            alt={about.avatarAlt}
+            width={200}
+            height={200}
+            class="mx-auto size-32 rounded-full object-cover shadow-[0_24px_60px_rgb(0_0_0/0.22)] sm:size-44"
+          />
+        </div>
+        <p class="eyebrow mt-8" data-load style="--i:1">
+          {aboutEntry.data.title}
+        </p>
+        <h1 class="mt-3" data-load style="--i:2">
+          <span
+            class="display block text-[clamp(3.75rem,13vw,8rem)] leading-none"
+          >
+            {about.name.ko}
+          </span>
+          <span
+            class="secondary mt-3 block text-[clamp(1.5rem,3.6vw,2.5rem)] font-semibold tracking-[-0.02em]"
+          >
+            {about.name.en}
+          </span>
+        </h1>
+        <p
+          class="headline mx-auto mt-8 max-w-3xl text-balance"
+          data-load
+          style="--i:3"
+        >
+          {about.headline}
+        </p>
+        <ul
+          class="divide-border mx-auto mt-12 flex max-w-4xl flex-col divide-y sm:flex-row sm:divide-x sm:divide-y-0"
+          data-load
+          style="--i:4"
+        >
+          {
+            about.facts.map(({ label, value }) => (
+              <li class="flex-1 px-5 py-3 sm:py-1">
+                <p class="secondary text-sm">{label}</p>
+                <p class="mt-0.5 text-lg font-semibold tracking-[-0.01em] text-balance">
+                  {value}
+                </p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="section pt-0!">
+      <div class="app-layout">
+        <ScrollHighlight
+          text={intro}
+          class="text-[clamp(1.5rem,3.6vw,2.5rem)] leading-[1.35] font-bold tracking-[-0.025em] text-pretty"
+        />
+      </div>
+    </section>
+
+    <section id="impact" class="section section-alt">
+      <div class="app-layout-wide">
+        <div class="mb-12 sm:mb-16" data-reveal>
+          <p class="eyebrow">{about.sections.impact.eyebrow}</p>
+          <h2 class="headline mt-2">{about.sections.impact.headline}</h2>
+        </div>
+        <ul class="grid grid-cols-2 gap-4 lg:grid-cols-6">
+          {
+            about.metrics.map(
+              ({ top, pre, n, dec, from, suf, label, span }, i) => (
+                <li
+                  class:list={["tile flex flex-col justify-between", span]}
+                  style={`--i:${i}`}
+                  data-reveal="scale"
+                >
+                  <p class="secondary text-lg font-medium">{label}</p>
+                  <p class="mt-10 font-bold tracking-[-0.03em] tabular-nums sm:mt-14">
+                    {top && (
+                      <span class="secondary block text-lg font-semibold whitespace-nowrap sm:text-2xl">
+                        {top}
+                      </span>
+                    )}
+                    <span class="text-[clamp(1.5rem,5.4vw,4rem)] leading-none sm:whitespace-nowrap">
+                      {pre}
+                      <span class="inline-block whitespace-nowrap">
+                        <span data-count={n} data-dec={dec} data-from={from}>
+                          {n.toLocaleString("en-US", {
+                            minimumFractionDigits: dec ?? 0,
+                            maximumFractionDigits: dec ?? 0,
+                          })}
+                        </span>
+                        <span class="text-[0.6em]">{suf}</span>
+                      </span>
+                    </span>
+                  </p>
+                </li>
+              )
+            )
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <div class="app-layout-wide">
+        <div class="mb-12 sm:mb-16" data-reveal>
+          <p class="eyebrow">{about.sections.strengths.eyebrow}</p>
+          <h2 class="headline mt-2">{about.sections.strengths.headline}</h2>
+        </div>
+        <ul class="tile-grid tile-grid-3">
+          {
+            skills.map(({ eyebrow, title, body, summary, metric }, i) => (
+              <li
+                class:list={[
+                  "tile flex flex-col",
+                  { "tile-ink lg:col-span-2": i === 0 },
+                ]}
+                style={`--i:${i % 3}`}
+                data-reveal="scale"
+              >
+                <p class="eyebrow">{eyebrow}</p>
+                <h3 class="tile-title mt-2 sm:text-3xl">{title}</h3>
+                <p
+                  class:list={[
+                    "mt-8 font-bold tracking-[-0.03em] tabular-nums",
+                    metric.quote
+                      ? "text-[clamp(1.5rem,2.6vw,2rem)] leading-tight text-balance"
+                      : "text-[clamp(1.75rem,4vw,3rem)] leading-none sm:whitespace-nowrap",
+                  ]}
+                >
+                  {metric.top && (
+                    <span class="secondary mb-1 block text-base font-semibold sm:text-lg">
+                      {metric.top}
+                    </span>
+                  )}
+                  {metric.text ?? (
+                    <>
+                      {metric.pre}
+                      <span
+                        data-count={metric.n}
+                        data-dec={metric.dec}
+                        data-from={metric.from}
+                      >
+                        {metric.n?.toFixed(metric.dec ?? 0)}
+                      </span>
+                      {metric.suf}
+                    </>
+                  )}
+                </p>
+                <p class="secondary mt-2 text-base">{metric.label}</p>
+                <p class="secondary clamp-3 mt-5 text-base leading-relaxed">
+                  {summary}
+                </p>
+                <div class="mt-auto pt-6">
+                  <More label={title}>
+                    <p class="secondary text-base leading-relaxed">{body}</p>
+                  </More>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section id="experience" class="section section-alt">
+      <div class="app-layout">
+        <div class="mb-12 sm:mb-16" data-reveal>
+          <p class="eyebrow">{about.sections.experience.eyebrow}</p>
+          <h2 class="headline mt-2">{about.sections.experience.headline}</h2>
+        </div>
+        <ol class="timeline">
+          {
+            about.experiences.map(({ company, period, body }, i) => {
+              const { first, rest } = splitFirst(body);
+              return i === 0 ? (
+                <li class="timeline-now" data-reveal>
+                  <p class="eyebrow mb-3 text-base!">{period}</p>
+                  <div class="tile">
+                    <h3 class="text-3xl font-bold tracking-[-0.025em] sm:text-4xl">
+                      {company}
+                    </h3>
+                    <p class="mt-4 text-lg leading-relaxed font-medium">
+                      {first}
+                    </p>
+                    <ul class="mt-6 flex flex-wrap gap-2">
+                      {about.highlights.map(h => (
+                        <li class="chip text-[0.9375rem]!">{h}</li>
+                      ))}
+                    </ul>
+                    {rest && (
+                      <div class="mt-6">
+                        <More label={company}>
+                          <p class="secondary text-base leading-relaxed">
+                            {rest}
+                          </p>
+                        </More>
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ) : (
+                <li
+                  class="md:grid md:grid-cols-[10rem_minmax(0,1fr)] md:gap-8"
+                  data-reveal
+                >
+                  <p class="secondary pt-1 text-base tabular-nums md:text-right">
+                    {period}
+                  </p>
+                  <div class="mt-1 md:mt-0">
+                    <h3 class="text-2xl font-bold tracking-[-0.02em]">
+                      {company}
+                    </h3>
+                    <p class="secondary mt-2 text-[1.0625rem] leading-relaxed">
+                      {first}
+                    </p>
+                    {rest && (
+                      <div class="mt-3">
+                        <More label={company}>
+                          <p class="secondary text-base leading-relaxed">
+                            {rest}
+                          </p>
+                        </More>
+                      </div>
+                    )}
+                  </div>
+                </li>
+              );
+            })
+          }
+          <li
+            class="md:grid md:grid-cols-[10rem_minmax(0,1fr)] md:gap-8"
+            data-reveal
+          >
+            <p class="secondary pt-1 text-base tabular-nums md:text-right">
+              {about.otherExperience.period}
+            </p>
+            <div class="mt-1 md:mt-0">
+              <h3 class="text-2xl font-bold tracking-[-0.02em]">
+                {about.otherExperience.title}
+              </h3>
+              <p class="mt-2 font-semibold">{about.otherExperience.company}</p>
+              <p class="secondary mt-1 leading-relaxed">
+                {about.otherExperience.description}
+              </p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="tech" class="section">
+      <div class="app-layout-wide">
+        <div class="mb-12 sm:mb-16" data-reveal>
+          <p class="eyebrow">{about.sections.stack.eyebrow}</p>
+          <h2 class="headline mt-2">{about.sections.stack.headline}</h2>
+        </div>
+        <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+          {
+            about.techGroups.map(({ name, items, span }, i) => (
+              <li
+                class:list={["tile", span]}
+                style={`--i:${i % 3}`}
+                data-reveal="scale"
+              >
+                <p class="eyebrow text-base!">{name}</p>
+                <ul class="mt-5 flex flex-wrap gap-2.5">
+                  {items.map(tech => (
+                    <li class="chip px-4! py-2! text-[0.9375rem]! font-medium">
+                      {tech}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section id="life" class="section section-alt">
+      <div class="app-layout-wide">
+        <div class="mb-12 sm:mb-16" data-reveal>
+          <p class="eyebrow">{about.sections.beyondWork.eyebrow}</p>
+          <h2 class="headline mt-2">{about.sections.beyondWork.headline}</h2>
+        </div>
+        <ul class="grid gap-4 sm:grid-cols-3">
+          {
+            about.hobbies.map(({ name, icon }, i) => (
+              <li
+                class="tile flex flex-col items-start gap-10"
+                style={`--i:${i}`}
+                data-reveal="scale"
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  class="text-accent size-12 fill-none stroke-current stroke-[1.5]"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d={icon} />
+                </svg>
+                <h3 class="tile-title sm:text-3xl">{name}</h3>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="secondary mt-8 text-center text-base" data-reveal>
+          {about.language}
+        </p>
+      </div>
+    </section>
+
+    <section id="stats" class="section">
+      <div class="app-layout-wide">
+        <div class="mb-12 sm:mb-16" data-reveal>
+          <p class="eyebrow">{about.sections.github.eyebrow}</p>
+          <h2 class="headline mt-2">{about.sections.github.headline}</h2>
+        </div>
+        <div class="grid items-stretch gap-4 lg:grid-cols-2">
+          <div
+            class="tile flex items-center justify-center"
+            data-reveal="scale"
+          >
+            <img
+              src={stats}
+              width="467"
+              height="170"
+              alt={about.sections.github.statsAlt}
+              loading="lazy"
+              class="h-auto max-w-full"
+            />
+          </div>
+          <div
+            class="tile flex items-center justify-center"
+            data-reveal="scale"
+            style="--i:1"
+          >
+            <img
+              src={topLangs}
+              width="300"
+              height="165"
+              alt={about.sections.github.langsAlt}
+              loading="lazy"
+              class="h-auto max-w-full"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section section-alt text-center">
+      <div class="app-layout" data-reveal>
+        <p class="eyebrow">{about.contact.eyebrow}</p>
+        <h2 class="display mt-3 text-balance">{about.contact.headline}</h2>
+        <div
+          class="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-4"
+        >
+          <a href={`mailto:${about.contact.email}`} class="btn"
+            >{about.contact.emailButtonLabel}</a
+          >
+          <a
+            href={about.contact.github.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-more"
+          >
+            {about.contact.github.label}
+          </a>
+          <a
+            href={about.contact.linkedin.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-more"
+          >
+            {about.contact.linkedin.label}
+          </a>
+        </div>
+        <p class="secondary mt-6 text-base">{about.contact.email}</p>
+      </div>
+    </section>
+  </main>
+
+  <Footer noMarginTop />
+</Layout>
