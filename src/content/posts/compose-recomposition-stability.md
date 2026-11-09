@@ -92,7 +92,7 @@ fun Header(title: String, $composer: Composer, $changed: Int) {
 
 `$composer.changed(title)` 은 slot table 에 저장해 둔 지난 값과 `equals()` 로 비교하고, 다르면 새 값을 저장합니다. 마지막 `updateScope` 가 앞에서 말한 "다시 실행하려면 이렇게 부르라"는 등록입니다.
 
-여기까지 보면 역할 분담이 분명합니다. **어떤 파라미터를 어떤 방식으로 비교할지는 컴파일러가 빌드 시점에 정해서 코드로 박아 넣습니다.** 런타임은 그 코드를 실행하며 slot table 의 값과 비교하고, 스냅샷 읽기를 추적해 어떤 범위를 무효화할지 정합니다. 런타임이 실행 중에 클래스를 들여다보고 stable 인지 판단하는 일은 없습니다. 예외는 제네릭인데, 아래에서 따로 다룹니다.
+여기까지 보면 역할 분담이 분명합니다. **stability 는 컴파일러가 빌드 시점에 추론하고, 그 결과에 맞는 비교 코드를 생성합니다.** 런타임은 그 코드를 실행하며 slot table 의 값과 비교하고, 스냅샷 읽기를 추적해 어떤 범위를 무효화할지 정합니다. 런타임이 리플렉션으로 클래스 구조를 들여다보는 일은 없습니다. 다만 빌드 시점에 결론을 낼 수 없는 타입이 있어서, 그때는 컴파일러가 "실행할 때 이 값을 읽어 결정하라"는 코드를 대신 넣습니다. 이 경우는 아래에서 따로 다룹니다.
 
 ## 컴파일러가 stability 를 추론하는 규칙
 
@@ -102,27 +102,38 @@ fun Header(title: String, $composer: Composer, $changed: Int) {
 
 - `Int`, `Long`, `Float`, `Boolean` 같은 원시 타입과 `String`
 - 함수 타입. 람다는 언제나 stable 로 취급됩니다.
+- enum 클래스와 `object`
 - `MutableState`, `SnapshotStateList`, `SnapshotStateMap` 처럼 변경을 스냅샷으로 알리는 타입
-- 모든 프로퍼티가 `val` 이고 그 타입이 전부 stable 인 클래스. 같은 모듈이든 다른 모듈이든 Compose 컴파일러가 처리한 모듈이어야 합니다.
-- kotlinx.collections.immutable 의 `ImmutableList`, `ImmutableMap` 같은 타입이나 `Pair` 처럼 컴파일러가 이름으로 아는 일부 외부 타입
+- 모든 프로퍼티가 `val` 이고 그 타입이 전부 stable 인 final 클래스. 같은 모듈이든 다른 모듈이든 Compose 컴파일러가 처리한 모듈이어야 합니다.
+- 컴파일러가 이름으로 아는 외부 타입. 컴파일러 소스의 `KnownStableConstructs` 에 목록이 있고, `Pair`, `Triple`, `Result`, `ClosedRange`, kotlinx.collections.immutable 의 `ImmutableList`·`PersistentList` 계열, Guava 의 `ImmutableList`·`ImmutableMap`, Dagger 의 `Lazy`, `BigInteger`, `BigDecimal`, `Locale` 이 들어 있습니다. 제네릭 타입은 타입 인자도 stable 이어야 해서 `Pair<String, Int>` 는 stable 이고 `Pair<String, MutableList<Int>>` 는 아닙니다.
 - `@Stable`, `@Immutable` 을 붙이거나 stability 설정 파일에 적은 타입
+
+같은 파일에는 `listOf`, `setOf`, `mapOf`, `emptyList`, `persistentListOf` 같은 함수 목록도 있습니다. 파라미터 타입이 `List` 라도 인자 자리에 `listOf("a", "b")` 를 직접 쓰면 그 식의 결과는 stable 로 봅니다.
 
 unstable 이 되는 경우도 규칙이 단순합니다.
 
-- `var` 프로퍼티가 하나라도 있으면 unstable 입니다. `var` 를 바꿔도 Compose 에 알릴 방법이 없기 때문입니다.
+- `var` 프로퍼티가 하나라도 있으면 unstable 입니다. `var` 를 바꿔도 Compose 에 알릴 방법이 없기 때문입니다. 위임 프로퍼티는 예외라서 `var name by mutableStateOf("")` 는 이 규칙에 걸리지 않습니다.
 - `val` 이어도 그 타입이 unstable 이면 클래스 전체가 unstable 입니다.
 - `List`, `Set`, `Map` 은 인터페이스라 실제 구현이 `ArrayList` 일 수도 있어서 unstable 입니다. 원소가 stable 이어도 마찬가지입니다.
 - Compose 컴파일러가 돌지 않은 모듈의 클래스는 unstable 입니다.
 
 마지막 규칙이 멀티 모듈 프로젝트에서 자주 걸립니다. 컴파일러는 클래스를 처리할 때 추론 결과를 `@StabilityInferred` 어노테이션과 `$stable` 이라는 정적 필드로 남깁니다. 다른 모듈이 그 클래스를 쓸 때는 소스를 다시 분석하지 않고 이 기록을 읽습니다. 순수 Kotlin 으로 빌드한 `domain` 모듈의 `data class` 에는 이 기록이 없으니, UI 모듈의 컴파일러는 안을 들여다보지 못하고 unstable 로 처리합니다. 필드가 전부 `val String` 이어도 그렇습니다.
 
-### 제네릭은 런타임에 결정됩니다
+### 빌드 시점에 정해지지 않는 경우
+
+컴파일러 소스의 `Stability` 는 `Certain`(확실히 stable 또는 unstable), `Runtime`, `Unknown`, `Parameter`, 그리고 이들을 묶은 `Combined` 로 나뉩니다. 뒤의 셋이 빌드 시점에 결론이 나지 않은 상태이고, 컴파일러 리포트에는 `stable` 도 `unstable` 도 아닌 `runtime` 으로 찍힙니다.
+
+- **`Runtime`**: 다른 모듈에서 온 클래스는 소스를 다시 분석하지 않고, 실행할 때 그 클래스의 `$stable` 필드를 읽는 코드를 넣습니다. JVM 에서는 같은 모듈이라도 다른 파일에 있는 `public`, `internal` 클래스면 이 방식을 씁니다.
+- **`Parameter`**: 제네릭 타입 파라미터 `T` 입니다.
+- **`Unknown`**: 인터페이스와 `open`, `abstract` 클래스입니다. 실제로 어떤 구현이 올지 모르기 때문입니다.
 
 ```kotlin
 class Box<T>(val value: T)
 ```
 
-`Box<String>` 은 stable 이고 `Box<MutableList<String>>` 는 unstable 입니다. 클래스 선언만으로는 정할 수 없으니 컴파일러는 `$stable` 필드에 "타입 파라미터 몇 번째의 stability 에 따라 결정된다"는 비트를 기록합니다. 호출 지점에서 타입 인자가 확정되면 그 정보로 비교 방식을 고르고, 그래도 정해지지 않으면 런타임에 `$stable` 값을 읽어 판단합니다. 컴파일러 리포트에서 이런 클래스는 `stable` 도 `unstable` 도 아닌 `runtime` 으로 표시됩니다.
+`Box<String>` 은 stable 이고 `Box<MutableList<String>>` 는 unstable 입니다. 컴파일러는 `@StabilityInferred` 의 `parameters` 값에 "몇 번째 타입 파라미터가 stability 에 영향을 주는가"를 비트로 기록합니다. 호출 지점에서 타입 인자가 정해지면 `Box` 자신의 `$stable` 과 타입 인자의 stability 를 합쳐 계산합니다.
+
+계산한 결과는 앞에서 본 `$changed` 로 넘어갑니다. `$changed` 는 파라미터마다 3비트를 쓰는데, 아래 두 비트가 같다·다르다·상수·모름을 나타내고 위의 한 비트가 unstable 여부를 나타냅니다. 호출하는 쪽이 `$stable` 값을 읽어 이 비트를 채우면, 호출받는 쪽은 stability 가 불확실한 파라미터를 비교할 때 이 비트를 보고 `changed()`(`equals()`)를 쓸지 `changedInstance()`(`===`)를 쓸지 고릅니다. 실행 중에 정해지는 것은 이 비트 하나이고, 비교 코드 두 갈래는 컴파일러가 미리 만들어 둡니다.
 
 추론 결과는 직접 확인할 수 있습니다.
 
@@ -163,12 +174,13 @@ Compose 컴파일러는 Kotlin 2.0 부터 Kotlin 저장소로 옮겨 와 Kotlin 
 
 - stable 파라미터: `equals()` 로 비교
 - unstable 파라미터: `===` 인스턴스 비교
+- 함수 타입 파라미터: stable 이지만 `===` 로 비교. 람다의 `equals()` 는 원래 인스턴스 비교라 결과는 같고, 아래의 자동 remember 덕분에 같은 인스턴스가 유지됩니다.
 
 **composable 안의 람다를 자동으로 remember 합니다.** 컴파일러가 람다를 `remember` 로 감싸고 캡처한 값을 키로 씁니다. 키 비교도 같은 규칙이라 unstable 캡처는 `===`, stable 캡처는 `equals()` 로 봅니다. 예전에 unstable 객체를 캡처한 `onClick = { viewModel.onClick(item) }` 이 재구성마다 새 람다가 되어 자식을 매번 다시 실행시키던 문제가 이걸로 사라졌습니다.
 
 예외가 필요하면 두 어노테이션을 씁니다. 건너뛰면 안 되는 컴포저블에는 `@NonSkippableComposable`, 기억하면 안 되는 람다에는 `@DontMemoize` 를 붙입니다. 모드 자체를 끄려면 `featureFlags` 에 `ComposeFeatureFlag.StrongSkipping.disabled()` 를 넣습니다.
 
-![원시 타입과 String 과 함수 타입, Compose 모듈의 val data class, ImmutableList, @Stable 과 @Immutable 클래스, MutableState 는 stable 로 추론되어 equals 로 비교되고, var 프로퍼티 클래스, List 인터페이스, Compose 컴파일러가 돌지 않은 모듈의 클래스는 unstable 로 추론되어 === 로 비교되며, 제네릭 클래스는 타입 인자에 따라 결정되는 표](@/assets/images/compose-stability-matrix.png)
+![원시 타입과 String 과 enum, Compose 모듈의 val data class, ImmutableList 와 Pair 같은 컴파일러가 아는 타입, @Stable 과 @Immutable 클래스, MutableState 는 stable 로 추론되어 equals 로 비교되고, 람다는 stable 이지만 === 로 비교되며, var 프로퍼티 클래스, List 인터페이스, Compose 컴파일러가 돌지 않은 모듈의 클래스는 unstable 로 추론되어 === 로 비교되고, 제네릭 클래스와 다른 파일이나 모듈의 public 클래스는 runtime 으로 남아 실행 중 $stable 비트로 비교 방식이 정해지는 표](@/assets/images/compose-stability-matrix.png)
 
 ## 그래서 최적화 기준이 뒤집혔습니다
 
@@ -223,3 +235,7 @@ composeCompiler {
 - [Compose compiler options DSL (Kotlin)](https://kotlinlang.org/docs/compose-compiler-options.html)
 - [ComposeCompilerGradlePluginExtension (Kotlin Gradle plugin API)](https://kotlinlang.org/api/kotlin-gradle-plugin/compose-compiler-gradle-plugin/org.jetbrains.kotlin.compose.compiler.gradle/-compose-compiler-gradle-plugin-extension/)
 - [Compose Runtime release notes (Android Developers)](https://developer.android.com/jetpack/androidx/releases/compose-runtime)
+- [Stability.kt (JetBrains/kotlin, Compose compiler)](https://github.com/JetBrains/kotlin/blob/master/plugins/compose/compiler-hosted/src/main/java/androidx/compose/compiler/plugins/kotlin/analysis/Stability.kt)
+- [KnownStableConstructs.kt (JetBrains/kotlin, Compose compiler)](https://github.com/JetBrains/kotlin/blob/master/plugins/compose/compiler-hosted/src/main/java/androidx/compose/compiler/plugins/kotlin/analysis/KnownStableConstructs.kt)
+- [ClassStabilityTransformer.kt (JetBrains/kotlin, Compose compiler)](https://github.com/JetBrains/kotlin/blob/master/plugins/compose/compiler-hosted/src/main/java/androidx/compose/compiler/plugins/kotlin/lower/ClassStabilityTransformer.kt)
+- [ComposableFunctionBodyTransformer.kt (JetBrains/kotlin, Compose compiler)](https://github.com/JetBrains/kotlin/blob/master/plugins/compose/compiler-hosted/src/main/java/androidx/compose/compiler/plugins/kotlin/lower/ComposableFunctionBodyTransformer.kt)
